@@ -63,7 +63,7 @@ NUM_INT:
     ('0'..'9')+;
 
 NUM_REAL:
-    NUM_INT '.' ('0'..'9')+;
+    ('0'..'9')+ '.' ('0'..'9')+;
 
 // ============ OPERATOR HANDLING ============
 
@@ -73,7 +73,7 @@ CONFIG_ATRIB:
 // ============ IGNORABLE SYMBOLS ============
 
 IGNORAVEL:
-    ( '\n' | '\t' | '\r' ) -> skip;
+    ( ' ' | '\n' | '\t' | '\r' ) -> skip;
 
 // ============ WILD-CARD ============
 
