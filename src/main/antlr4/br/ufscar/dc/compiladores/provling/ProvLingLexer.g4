@@ -1,4 +1,4 @@
-lexer grammar ProvlingLexer;
+lexer grammar ProvLingLexer;
 
 // programa:
 //     identificador_prova questao*;

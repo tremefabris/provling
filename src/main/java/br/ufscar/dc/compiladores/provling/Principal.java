@@ -14,14 +14,14 @@ public class Principal {
         try {
             
             CharStream cs = CharStreams.fromFileName(args[0]);
-            ProvlingLexer lex = new ProvlingLexer(cs);
+            ProvLingLexer lex = new ProvLingLexer(cs);
 
             Token t = null;
 
             while( (t = lex.nextToken()).getType() != Token.EOF ) {
 
                 String tokenText = "\'" + t.getText() + "\'";
-                String tokenType = ProvlingLexer.VOCABULARY.getDisplayName(t.getType());
+                String tokenType = ProvLingLexer.VOCABULARY.getDisplayName(t.getType());
 
                 System.out.println(
                     "<" + tokenText + ", " + tokenType + ">"
