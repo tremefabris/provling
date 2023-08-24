@@ -1,31 +1,31 @@
-lexer grammar ProvLingLexer;
+grammar ProvLing;
 
-// programa:
-//     identificador_prova questao*;
+programa:
+    identificador_prova questao*;
 
-// identificador_prova:
-//     'QUESTÕES'? 'PARA'? 'PROVA'? IDENT;
+identificador_prova:
+    'QUESTOES'? 'PARA'? 'PROVA' IDENT;
 
-// questao:
-//     identificador_questao enunciado alternativas resposta explicacoes? fim_questao;
+questao:
+    identificador_questao enunciado alternativas resposta explicacoes? fim_questao;
 
-// identificador_questao:
-//     'QUESTÃO' IDENT;
+identificador_questao:
+    'QUESTAO' OP_ATRIB IDENT;
 
-// enunciado:
-//     'ENUNCIADO' FRASE;
+enunciado:
+    'ENUNCIADO' OP_ATRIB FRASE;
 
-// alternativas:
-//     'ALTERNATIVAS' (('a'..'z' | 'A'..'Z') ':' FRASE)+;
+alternativas:
+    'ALTERNATIVAS' OP_ATRIB (LETRA OP_ATRIB FRASE)+;
 
-// resposta:
-//     'RESPOSTA' ('a'..'z' | 'A'..'Z');
+resposta:
+    'RESPOSTA' OP_ATRIB (LETRA);
 
-// explicacoes:
-//     'EXPLICACOES' (('a'..'z' | 'A'..'Z') ':' FRASE)+;
+explicacoes:
+    'EXPLICACOES' OP_ATRIB (LETRA OP_ATRIB FRASE)+;
 
-// fim_questao:
-//     'FIM' 'QUESTAO' IDENT;
+fim_questao:
+    'FIM' 'QUESTAO' IDENT;
 
 // ============ KEYWORDS AND IDENTIFIERS ============
 
@@ -67,7 +67,7 @@ NUM_REAL:
 
 // ============ OPERATOR HANDLING ============
 
-CONFIG_ATRIB:
+OP_ATRIB:
     ':';
 
 // ============ IGNORABLE SYMBOLS ============
