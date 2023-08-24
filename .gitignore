@@ -1,4 +1,4 @@
 /.vscode
 /tests
 /target
-*/.antlr
+.antlr
