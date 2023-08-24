@@ -1,6 +1,8 @@
 package br.ufscar.dc.compiladores.provling;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -12,6 +14,21 @@ import br.ufscar.dc.compiladores.provling.ProvLingParser.ProgramaContext;
 
 public class Principal {
 
+    static PrintWriter setupOutputFile(String filepath) {
+        try {
+            File outFile = new File(filepath);
+            outFile.createNewFile();
+            PrintWriter pw = new PrintWriter(outFile, "UTF-8");
+            return pw;
+        }
+        catch (IOException e) {
+            System.out.println("An error occured while opening file");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
     public static void main(String[] args) {
 
         try {
@@ -20,11 +37,18 @@ public class Principal {
             ProvLingLexer lex = new ProvLingLexer(cs);
             CommonTokenStream tokens = new CommonTokenStream(lex);
             ProvLingParser parser = new ProvLingParser(tokens);
-
             ProgramaContext tree = parser.programa();
             ProvLingSemantic sem = new ProvLingSemantic();
 
+            PrintWriter outputFile = setupOutputFile(args[1]);
+            if (outputFile == null) {
+                System.exit(-1);
+            }
+
             sem.visitPrograma(tree);
+
+            System.out.println(ProvLingSemanticUtils.output);
+            outputFile.print(ProvLingSemanticUtils.output);
 
             // Token t = null;
 
@@ -39,7 +63,7 @@ public class Principal {
 
             // }
 
-
+            outputFile.close();
 
         }
 
