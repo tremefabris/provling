@@ -4,7 +4,7 @@ programa:
     identificador_prova questao*;
 
 identificador_prova:
-    'QUESTOES'? 'PARA'? 'PROVA' IDENT;
+    'QUESTOES'? 'PARA'? 'PROVA' OP_ATRIB IDENT;
 
 questao:
     identificador_questao enunciado alternativas resposta explicacoes? fim_questao;
@@ -25,7 +25,7 @@ explicacoes:
     'EXPLICACOES' OP_ATRIB (LETRA OP_ATRIB FRASE)+;
 
 fim_questao:
-    'FIM' 'QUESTAO' IDENT;
+    'FIM' 'QUESTAO' OP_ATRIB IDENT;
 
 // ============ KEYWORDS AND IDENTIFIERS ============
 
