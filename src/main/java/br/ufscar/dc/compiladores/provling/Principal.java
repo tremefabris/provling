@@ -1,6 +1,8 @@
 package br.ufscar.dc.compiladores.provling;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
