@@ -75,9 +75,11 @@ public class Principal {
             }
 
             sem.visitPrograma(tree);
+            
+            String prova = sem.getProva();
 
-            // System.out.println(ProvLingSemanticUtils.output);
-            outputFile.print(ProvLingSemanticUtils.output);
+            System.out.print(prova);
+            outputFile.print(prova);
 
 
             outputFile.close();
