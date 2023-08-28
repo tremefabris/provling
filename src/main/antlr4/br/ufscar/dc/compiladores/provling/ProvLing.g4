@@ -36,7 +36,7 @@ header:
 header_info:
     instituicao |
     disciplina |
-    professores |
+    docentes |
     diretrizes;
 
 instituicao:
@@ -45,8 +45,8 @@ instituicao:
 disciplina:
     'DISCIPLINA' OP_ATRIB FRASE;
 
-professores:
-    'PROFESSORES' OP_ATRIB FRASE+;
+docentes:
+    'DOCENTES' OP_ATRIB FRASE+;
 
 diretrizes:
     'DIRETRIZES' OP_ATRIB diretriz*;
