@@ -123,7 +123,7 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
             super.visitConfigs(cctx);
         }
 
-        // TODO: Adicionar pb.addQuestions()
+        pb.addQuestions();
 
         return null;
     }

@@ -277,6 +277,8 @@ public class ProvBuilder {
     // TODO: Follow the configurations established
     // TODO: by the user
     public void addQuestions() {
+        QuestionManager qm = QuestionManager.FromCSV(this.prova_folder);
+        qm.__debugQuestions();
     }
 
 
