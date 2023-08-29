@@ -1,7 +1,9 @@
 package br.ufscar.dc.compiladores.provling;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
 
 public class ProvBuilder {
 
@@ -19,12 +21,12 @@ public class ProvBuilder {
  
     private String prova_content;
     
-    // header settings
 
+    // header settings
     private String instituicao;
     private String disciplina;
-    private List<String> professores;
-    private Map<Integer, String> diretrizes;
+    private List<String> docentes = null;
+    private Map<String, String> diretrizes = null;
 
     // exam settings
     private Integer tipos_prova;
@@ -155,10 +157,93 @@ public class ProvBuilder {
             ._addlr("\\htword{\\textcolor{blue}{Total}}"                        )
             ._endl();
     }
-    public void addInstituicao() {
-        this._addr("\\newcommand{\\instituicao}{")
-            ._addr(this.instituicao)
-            ._addr("}")
+    public void addHeaderDefinitions() {
+        String _instituicao_str = "\\newcommand{\\instituicao}{" + this.instituicao + "}";
+        String _disciplina_str = "\\newcommand{\\disciplina}{" + this.disciplina + "}";
+
+        this._addlr("%=========================================================")
+            ._addlr("%------------DEFINIÇÕES DE HEADER"                         )
+            ._addlr("%=========================================================")
+            ._addlr(_instituicao_str)
+            ._addl( _disciplina_str);
+
+        for (int i = 0; i < this.docentes.size(); i++) {
+            String _docente_str = "\\newcommand{\\docente" +
+                                  (char)(65 + i) +
+                                  "}{" + this.docentes.get(i) + "}";
+            
+            this._addl(_docente_str);
+        }
+
+        this._addlr("\\newcommand{\\prova}{Prova de \\disciplina}"              )
+            ._addlr("\\newcommand{\\aluno}{\\bf Aluno:}"                        )
+            ._endl();
+    }
+    public void addHeaders() {
+        this._addlr("%========================================================="                        )
+            ._addlr("%------------CABEÇALHOS"                                                           )
+            ._addlr("%========================================================="                        )
+            ._addlr("\\pagestyle{headandfoot}"                                                          )
+            ._addlr("\\firstpageheader{}{}{}"                                                           )
+            ._addlr("\\runningheader{\\prova}{}{}"                                                      )
+            ._addlr("\\runningheadrule"                                                                 )
+            ._addlr("\\firstpagefooter{}{}{}"                                                           )
+            ._addlr("\\runningfooter{}{Boa Prova!}{Pag. \\thepage\\ de \\numpages}"                     )
+            ._addlr("\\runningfootrule"                                                                 )
+            ._addlr("%========================================================"                         )
+            ._addlr("\\begin{document}"                                                                 )
+            ._addlr("\\fontsize{14}{14}\\selectfont"                                                    )
+            ._addlr("\\begin{tabular*}{\\textwidth}{l @{\\extracolsep{\\fill}}l @{\\extracolsep{6pt}}l}")
+            ._addlr("%--------------------Instituição"                                                  )
+            ._addlr("\\multicolumn{3}{c}{\\textbf{\\instituicao}} \\\\[8pt]"                            )
+            ._addlr("%--------------------Disciplina"                                                   )
+            ._addlr("\\multicolumn{3}{c}{\\textbf{\\disciplina}} \\\\[8pt]"                             )
+            ._addlr("%-------------------Disciplina e Professor"                                        )
+            ._add("\\textbf{Docente(s): \\docente"                                                      );
+
+        String[] _trailing_text = {", \\docente", "} \\\\[8pt]"};
+        for (int i = 0; i < this.docentes.size(); i++) {
+            String _letra = String.valueOf((char)(65 + i));
+            this._addr(_letra)
+                ._add( _trailing_text[i]);
+        }
+        this._endl();
+
+        this._addlr("%-------------------"                                            )
+            ._addlr("\\multicolumn{3}{l}{\\Large{\\aluno \\textbf{\\hrulefill}}} \\\\")
+            ._addlr("\\end{tabular*}"                                                 )
+            ._addlr("%--------------------LINHA CENTRAL"                              )
+            ._addlr("\\begin{center}"                                                 )
+            ._addlr("\\rule[1ex]{\\textwidth}{1pt}"                                   )
+            ._addlr("{\\Large{\\prova}} \\\\[6pt]"                                    )
+            ._addlr("Data:\\hspace{1cm}/\\hspace{1cm}/\\hspace{1cm} \\\\[6pt]"        )
+            ._addlr("\\rule[2ex]{\\textwidth}{1pt}"                                   )
+            ._addlr("\\end{center}"                                                   )
+            ._endl();
+    }
+    public void addGuidelines() {
+        this._addlr("%========================================================="              )
+            ._addlr("%-------------------DIRETRIZES"                                          )
+            ._addlr("%========================================================="              )
+            ._addlr("\\noindent"                                                              )
+            ._addlr("Esta prova contém \\numpages\\ página(s), incluindo esta capa, e "       )
+            ._addlr("\\numquestions\\ questões, formando um um total de \\numpoints\\ pontos.")
+            ._addlr("A aplicação dessa prova será regida pelas seguintes diretrizes, "        )
+            ._addlr("definidas pelo(s) docente(s):"                                           )
+            ._addlr("\\vspace{0.5cm}"                                                         )
+            ._addlr("\\noindent"                                                              )
+            ._addlr("\\begin{tcolorbox}[colframe=black, colback=white]"                       )
+            ._addl( "\\begin{itemize}"                                                        );
+
+        for (Map.Entry<String, String> dir : this.diretrizes.entrySet()) {
+            String _diretriz_str = "\\item [" + dir.getKey() + "] " +
+                                                dir.getValue();
+            
+            this._addl(_diretriz_str);
+        }
+
+        this._addlr("\\end{itemize}"                                                          )
+            ._addlr("\\end{tcolorbox}"                                                        )
             ._endl();
     }
 
@@ -170,6 +255,22 @@ public class ProvBuilder {
     public void defineInstituicao(String instituicao) {
         this.instituicao = instituicao;
     }
+    public void defineDisciplina(String disciplina) {
+        this.disciplina = disciplina;
+    }
+    public void defineDocente(String docente) {
+        if (this.docentes == null) {
+            this.docentes = new ArrayList<String>();
+        }
+        this.docentes.add(docente);
+    }
+    public void defineDiretriz(String num, String diretriz) {
+        if (this.diretrizes == null) {
+            this.diretrizes = new HashMap<String, String>();
+        }
+        this.diretrizes.put(num, diretriz);
+    }
+    
 
     /////////////////////////////////////////////////////////////////////////
     //  DEBUG FUNCTIONS

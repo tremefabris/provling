@@ -1,5 +1,6 @@
 package br.ufscar.dc.compiladores.provling;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     
@@ -51,13 +52,65 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     }
 
     @Override
+    public Void visitHeader(ProvLingParser.HeaderContext ctx) {
+
+        for (ProvLingParser.Header_infoContext hctx : ctx.header_info()) {
+            super.visitHeader_info(hctx);
+        }
+
+        pb.addHeaderDefinitions();
+        pb.addHeaders();
+        pb.addGuidelines();
+
+        return null;
+    }
+
+    @Override
     public Void visitInstituicao(ProvLingParser.InstituicaoContext ctx) {
 
         String instituicao_raw = ctx.FRASE().getText();
         pb.defineInstituicao(this._strip(instituicao_raw));
-        pb.addInstituicao();
 
         return super.visitInstituicao(ctx);
+    }
+
+    @Override
+    public Void visitDisciplina(ProvLingParser.DisciplinaContext ctx) {
+
+        String disciplina_raw = ctx.FRASE().getText();
+        pb.defineDisciplina(this._strip(disciplina_raw));
+
+        return super.visitDisciplina(ctx);
+    }
+
+    @Override
+    public Void visitDocentes(ProvLingParser.DocentesContext ctx) {
+
+        for (TerminalNode docente : ctx.FRASE()) {
+            pb.defineDocente(this._strip(docente.getText()));
+        }
+
+        return super.visitDocentes(ctx);
+    }
+
+    @Override
+    public Void visitDiretriz(ProvLingParser.DiretrizContext ctx) {
+
+        // TODO: add semantic error if current Diretriz doesn't follow
+        // TODO: previous Diretriz order
+        //
+        // EX:  1: bla bla
+        //      2: bla bla
+        //      4: bla bla 
+
+        String num = ctx.NUM_INT() != null ?
+                        ctx.NUM_INT().getText() :
+                        ctx.NUM_REAL().getText();
+        String diretriz_raw = ctx.FRASE().getText();
+
+        pb.defineDiretriz(num, this._strip(diretriz_raw));
+
+        return super.visitDiretriz(ctx);
     }
 
     /////////////////////////////////////////////////////////////////////////
