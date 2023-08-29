@@ -33,6 +33,7 @@ config_geracao:
 header:
     header_info+;
 
+// TODO: add DEPTO
 header_info:
     instituicao |
     disciplina |
@@ -52,7 +53,7 @@ diretrizes:
     'DIRETRIZES' OP_ATRIB diretriz*;
 
 diretriz:
-    NUM_INT OP_ATRIB FRASE;
+    ( NUM_INT | NUM_REAL) OP_ATRIB FRASE;
 
 config_prova:
     'CONFIG' OP_ATRIB configs+;
