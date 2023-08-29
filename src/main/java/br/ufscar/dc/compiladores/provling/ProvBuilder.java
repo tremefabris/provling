@@ -246,6 +246,19 @@ public class ProvBuilder {
             ._addlr("\\end{tcolorbox}"                                                        )
             ._endl();
     }
+    public void addGradeTable() {
+        this._addlr("%=========================================================")
+            ._addlr("%-------------------TABELA DE PONTUAÇÃO"                   )
+            ._addlr("%=========================================================")
+            ._addlr("\\begin{center}"                                           )
+            ._addlr("\\textbf{Tabela (para USO EXCLUSIVO do professor)}\\\\"    )
+            ._addlr("\\addpoints"                                               )
+            ._addlr("\\gradetable[h][questions]"                                )
+            ._addlr("\\end{center}"                                             )
+            ._addlr("\\noindent"                                                )
+            ._addlr("\\rule[1ex]{\\textwidth}{1pt}"                             )
+            ._endl();
+    }
 
 
     /////////////////////////////////////////////////////////////////////////

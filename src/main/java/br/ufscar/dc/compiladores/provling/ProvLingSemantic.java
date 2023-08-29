@@ -63,6 +63,7 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         pb.addHeaderDefinitions();
         pb.addHeaders();
         pb.addGuidelines();
+        pb.addGradeTable();
 
         return null;
     }
