@@ -51,17 +51,15 @@ public class ProvBuilder {
     }
 
 
-    public ProvBuilder withProvaId(String prova_id) {
+    public void withProvaId(String prova_id) {
         this.prova_id = prova_id;
         this.prova_id_set = true;
         this._setupProvaFolder();
-        return this;
     }
-    public ProvBuilder withMainFolder(String main_folder) {
+    public void withMainFolder(String main_folder) {
         this.main_folder = main_folder;
         this.main_folder_set = true;
         this._setupProvaFolder();
-        return this;
     }
     private void _setupProvaFolder() {  // TODO: Add folder path treatment
         if (this.main_folder_set && this.prova_id_set)
