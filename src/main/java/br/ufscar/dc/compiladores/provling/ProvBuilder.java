@@ -182,7 +182,7 @@ public class ProvBuilder {
             ._addlr(_instituicao_str)
             ._addl( _disciplina_str);
 
-        for (int i = 0; i < this.docentes.size(); i++) {
+        for (Integer i = 0; i < this.docentes.size(); i++) {
             String _docente_str = "\\newcommand{\\docente" +
                                   (char)(65 + i) +
                                   "}{" + this.docentes.get(i) + "}";
@@ -217,7 +217,7 @@ public class ProvBuilder {
             ._add("\\textbf{Docente(s): \\docente"                                                      );
 
         String[] _trailing_text = {", \\docente", "} \\\\[8pt]"};
-        for (int i = 0; i < this.docentes.size(); i++) {
+        for (Integer i = 0; i < this.docentes.size(); i++) {
             String _letra = String.valueOf((char)(65 + i));
             this._addr(_letra)
                 ._add( _trailing_text[i]);
@@ -278,9 +278,37 @@ public class ProvBuilder {
     // TODO: by the user
     public void addQuestions() {
         QuestionManager qm = QuestionManager.FromCSV(this.prova_folder);
-        qm.__debugQuestions();
-    }
 
+        this._addlr("\\begin{questions}"                                        )
+            ._addlr("%=========================================================")
+            ._addlr("%-------------------QUESTÕES DA PROVA"                     )
+            ._addl( "%=========================================================");
+        
+        for (Integer i = 0; i < qm.totalQuestions(); i++) {
+
+            this._addlr("\\question[1] " + qm.getEnunciadoFromQuestion(i))
+                ._addl( "\\begin{choices}"                            );
+
+            for (String alt : qm.getAlternativasFromQuestion(i)) {
+                this._addl("\\choice " + alt);
+            }
+
+            this._addlr("\\end{choices}")
+                ._endl();
+
+        }
+
+        this._addlr("\\end{questions}")
+            ._endl();
+    }
+    public void addEnding() {
+        this._addlr("%=========================================================")
+            ._addlr("%-------------------FIM DA PROVA"                          )
+            ._addlr("%=========================================================")
+            ._addlr("\\end{thebibliography}"                                    )
+            ._addlr("\\end{document}"                                           )
+            ._endl();
+    }
 
     /////////////////////////////////////////////////////////////////////////
     //  BUILDING, RETURNING FUNCS

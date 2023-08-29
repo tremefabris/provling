@@ -161,6 +161,7 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         }
 
         pb.addQuestions();
+        pb.addEnding();
 
         return null;
     }
