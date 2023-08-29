@@ -116,6 +116,42 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitDiretriz(ctx);
     }
 
+    @Override
+    public Void visitConfig_prova(ProvLingParser.Config_provaContext ctx) {
+
+        for (ProvLingParser.ConfigsContext cctx : ctx.configs()) {
+            super.visitConfigs(cctx);
+        }
+
+        // TODO: Adicionar pb.addQuestions()
+
+        return null;
+    }
+
+    @Override
+    public Void visitConfigs(ProvLingParser.ConfigsContext ctx) {
+
+        Integer config_value = Integer.parseInt(ctx.NUM_INT().getText());
+
+        if (ctx.getText().startsWith("TIPOS")) {
+
+            pb.withTypes(config_value);
+
+        }
+        if (ctx.getText().startsWith("QUESTOES")) {
+
+            pb.withQuestions(config_value);
+
+        }
+        if (ctx.getText().startsWith("ALUNOS")) {
+
+            pb.withParticipants(config_value);
+
+        }
+
+        return super.visitConfigs(ctx);
+    }
+
     /////////////////////////////////////////////////////////////////////////
     //  DEBUGGINGS, RETURNS
     /////////////////////////////////////////////////////////////////////////

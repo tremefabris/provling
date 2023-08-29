@@ -30,8 +30,14 @@ public class ProvBuilder {
 
     // exam settings
     private Integer tipos_prova;
+    // private boolean tipos_prova_set = false;
+
     private Integer questoes_por_prova;
+    // private boolean questoes_por_prova_set = false;
+
     private Integer alunos_total;
+    // private boolean alunos_total_set = false;
+
 
 
     /////////////////////////////////////////////////////////////////////////
@@ -63,8 +69,19 @@ public class ProvBuilder {
     }
     private void _setupProvaFolder() {  // TODO: Add folder path treatment
         if (this.main_folder_set && this.prova_id_set)
-            this.prova_folder = main_folder + prova_id;
+            this.prova_folder = main_folder + prova_id + ".csv";
     }
+
+    public void withTypes(Integer num_types) {
+        this.tipos_prova = num_types;
+    }
+    public void withQuestions(Integer num_questions) {
+        this.questoes_por_prova = num_questions;
+    }
+    public void withParticipants(Integer num_participants) {
+        this.alunos_total = num_participants;
+    }
+    
 
     /////////////////////////////////////////////////////////////////////////
     //  TEXT-ADDING FUNCTIONS
@@ -256,6 +273,10 @@ public class ProvBuilder {
             ._addlr("\\noindent"                                                )
             ._addlr("\\rule[1ex]{\\textwidth}{1pt}"                             )
             ._endl();
+    }
+    // TODO: Follow the configurations established
+    // TODO: by the user
+    public void addQuestions() {
     }
 
 
