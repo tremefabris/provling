@@ -30,9 +30,11 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     @Override
     public Void visitPrograma(ProvLingParser.ProgramaContext ctx) {
 
-        pb = new ProvBuilder();
-        pb.withMainFolder(MAIN_FOLDER);
-        pb.addTemplateInfo();
+        if (ctx.config_geracao() != null) {
+            pb = new ProvBuilder();
+            pb.withMainFolder(MAIN_FOLDER);
+            pb.addTemplateInfo();
+        }
 
         return super.visitPrograma(ctx);
     }
