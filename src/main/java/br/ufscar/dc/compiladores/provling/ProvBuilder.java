@@ -3,7 +3,7 @@ package br.ufscar.dc.compiladores.provling;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ProvBuilder {
 
@@ -300,7 +300,7 @@ public class ProvBuilder {
     }
     public void defineDiretriz(String num, String diretriz) {
         if (this.diretrizes == null) {
-            this.diretrizes = new HashMap<String, String>();
+            this.diretrizes = new LinkedHashMap<String, String>();
         }
         this.diretrizes.put(num, diretriz);
     }
