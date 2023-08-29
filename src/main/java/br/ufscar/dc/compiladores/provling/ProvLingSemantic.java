@@ -23,6 +23,23 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return frase.substring(1, frase.length() - 1);
     }
 
+    private boolean _areOrderedCorrectly(String first_num, String sec_num) {
+
+        Double first = Double.parseDouble(first_num);
+        Double second = Double.parseDouble(sec_num);
+
+        if (second - first <= 1.0) {
+            if (second - first <= 0.1) {
+                return true;
+            }
+            else if (second - first == 1.0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /////////////////////////////////////////////////////////////////////////
     //  OVERRIDES -- SEMANTIC TREE TRAVERSING
     /////////////////////////////////////////////////////////////////////////
@@ -97,14 +114,34 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitDiretriz(ProvLingParser.DiretrizContext ctx) {
+    public Void visitDiretrizes(ProvLingParser.DiretrizesContext ctx) {
 
-        // TODO: add semantic error if current Diretriz doesn't follow
-        // TODO: previous Diretriz order
-        //
-        // EX:  1: bla bla
-        //      2: bla bla
-        //      4: bla bla 
+        if (ctx.diretriz() != null) {
+
+            String curr_num;
+            String last_num = null;
+            for (ProvLingParser.DiretrizContext dctx : ctx.diretriz()) {
+
+                curr_num = dctx.NUM_INT() != null ?
+                                dctx.NUM_INT().getText() :
+                                dctx.NUM_REAL().getText();
+                
+                if (last_num != null)
+                    if (!this._areOrderedCorrectly(last_num, curr_num))
+                        SemanticErrorHandler.addWarning(
+                            dctx.getStart(),
+                            "diretriz " + curr_num + " está desordenada"    
+                        );
+
+                last_num = curr_num;
+            }
+        }
+
+        return super.visitDiretrizes(ctx);
+    }
+
+    @Override
+    public Void visitDiretriz(ProvLingParser.DiretrizContext ctx) {
 
         String num = ctx.NUM_INT() != null ?
                         ctx.NUM_INT().getText() :

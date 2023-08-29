@@ -75,11 +75,14 @@ public class Principal {
             }
 
             sem.visitPrograma(tree);
-            
+
             String prova = sem.getProva();
 
             System.out.print(prova);
             outputFile.print(prova);
+
+            for (String e : SemanticErrorHandler.errors)
+                System.out.println(e);
 
 
             outputFile.close();
