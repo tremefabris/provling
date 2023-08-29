@@ -50,7 +50,7 @@ docentes:
     'DOCENTES' OP_ATRIB FRASE+;
 
 diretrizes:
-    'DIRETRIZES' OP_ATRIB diretriz*;
+    'DIRETRIZES' OP_ATRIB diretriz+;
 
 diretriz:
     ( NUM_INT | NUM_REAL) OP_ATRIB FRASE;
