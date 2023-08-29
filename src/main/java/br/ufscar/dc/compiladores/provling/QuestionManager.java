@@ -151,6 +151,21 @@ public class QuestionManager {
     }
 
     /////////////////////////////////////////////////////////////////////////
+    //  QUESTION-ACESSING FUNCS
+    /////////////////////////////////////////////////////////////////////////
+
+    public Integer totalQuestions() {
+        return this.questoes.size();
+    }
+    public String getEnunciadoFromQuestion(Integer idx) {
+        return this.questoes.get(idx).enunciado;
+    }
+    public List<String> getAlternativasFromQuestion(Integer idx) {
+        return this.questoes.get(idx).alternativas;
+    }
+    
+
+    /////////////////////////////////////////////////////////////////////////
     //  HELPER FUNCS
     /////////////////////////////////////////////////////////////////////////
 
