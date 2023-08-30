@@ -56,6 +56,31 @@ public class Gerador  extends ProvLingBaseVisitor<Void> {
            
             for (int i = 0; i<ctx.questao().size(); i++){
                 ProvLingParser.QuestaoContext ctx2 = ctx.questao(i);
+                File outFile = new File(caminho_prova);
+            if (!outFile.exists()){
+                //outFile.createNewFile();
+                boolean created = outFile.mkdirs();
+                if(!created){
+                System.out.println("An OTHER different error occurred.");
+                System.exit(-1);
+            }
+            
+
+            }else{
+                if (!outFile.isDirectory()){
+                    //outFile.createNewFile();
+                    if (!outFile.exists()){
+                        System.out.println("não foi criado");
+                    }
+                    boolean created = outFile.mkdirs();
+                    if(!created){
+                        System.out.println("aqui gui.");
+                        System.exit(-1);
+                    }
+                    
+                }
+
+            }
                 visitQuestao(ctx2);
                 String questao_id = ctx2.identificador_questao().IDENT().getText();
                 int quantidade = ctx2.alternativas().FRASE().size();
@@ -83,7 +108,49 @@ public class Gerador  extends ProvLingBaseVisitor<Void> {
 
     @Override
     public Void visitQuestao(ProvLingParser.QuestaoContext ctx){
+        String questao_id = ctx.identificador_questao().IDENT().getText();
+        String caminho_quest = caminho_prova +"/"+ questao_id;
+        File file2 = new File(caminho_quest + ".csv");
+       
+        try {
+           
+            FileWriter outputfile2 = new FileWriter(file2);
+    
+           
+            CSVWriter writer2 = new CSVWriter(outputfile2);
+            
 
+            if(ctx.explicacoes()!= null){
+                String[] header = { "prova", "questao", "alternativa", "explicacao"};
+                writer2.writeNext(header);
+                for(int i =0; i< ctx.alternativas().FRASE().size(); i++){
+                    String alternativa = ctx.alternativas().FRASE(i).getText();
+                    String explicacao = ctx.explicacoes().FRASE(i).getText();
+                    
+                    String[] linha = { nome_prova, questao_id , alternativa, explicacao};
+                    writer2.writeNext(linha);
+                }
+
+            }else{
+                String[] header = { "prova", "questao", "alternativa"};
+                writer2.writeNext(header);
+                for(int i =0; i< ctx.alternativas().FRASE().size(); i++){
+                    String alternativa = ctx.alternativas().FRASE(i).getText();
+                    
+                    
+                    String[] linha = { nome_prova, questao_id , alternativa};
+                    writer2.writeNext(linha);
+                }
+            }
+
+
+
+            writer2.close();
+        }
+        catch (IOException e) {
+            
+            e.printStackTrace();
+        }
 
         return null;
     }
