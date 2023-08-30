@@ -4,13 +4,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>br.ufscar.dc.compiladores</groupId>
+ <groupId>br.ufscar.dc.compiladores</groupId>
   <artifactId>provling</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>provling</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+ <packaging>jar</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,6 +28,11 @@
       <artifactId>antlr4</artifactId>
       <version>4.11.1</version>
       <classifier>complete</classifier>
+    </dependency>
+     <dependency>
+      <groupId>com.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>5.8</version>
     </dependency>
   </dependencies>
 
