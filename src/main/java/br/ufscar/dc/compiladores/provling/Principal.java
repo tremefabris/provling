@@ -74,11 +74,18 @@ public class Principal {
                 System.exit(-1);
             }
 
-            sem.visitPrograma(tree);
+            try {
+                sem.visitPrograma(tree);
+            }
+            // TODO: Proper exception handling for better error messages
+            catch (Exception e) {
+                System.out.println("Hey, remember me?");
+                e.printStackTrace();
+            }
 
             String prova = sem.getProva();
 
-            System.out.print(prova);
+            // System.out.print(prova);
             outputFile.print(prova);
 
             for (String e : SemanticErrorHandler.errors)
