@@ -64,7 +64,7 @@ public class Gerador  extends ProvLingBaseVisitor<Void> {
                 String resposta = ctx2.resposta().LETRA().getText();
                 String[] linha = { nome_prova, questao_id , qtde_alternativas, enunciado, resposta };
                 writer.writeNext(linha);
-                //TODO: add no csv
+                
             }
 
         writer.close();
