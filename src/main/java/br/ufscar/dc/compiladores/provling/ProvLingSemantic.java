@@ -14,7 +14,7 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     
     SymbolTable local_table;
     
-    public int LetterToNumber(String letter){
+    public int letterToNumber(String letter){
         int a;
 
         switch (letter) {
@@ -97,7 +97,7 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
                 a=25;
                 break;
             default:
-                a=0;
+                a=26;
                 break;
         }
         return a; 
@@ -128,16 +128,17 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     public Void visitAlternativas(ProvLingParser.AlternativasContext ctx){
 
         for (int i=0; i<ctx.LETRA().size(); i++){
-            if(local_table.exists(ctx.LETRA(i).getText())){
-                ProvLingSemanticUtils.addSemanticError(ctx.LETRA(i).getSymbol(), "letra já usada para identificar uma alternativa");
-            }else{
-                if(local_table.existsequal(ctx.FRASE(i).getText())){
-                    ProvLingSemanticUtils.addSemanticError(ctx.FRASE(i).getSymbol(), "existe uma alternativa exatamente igual");
-                }else{
-                    local_table.add(ctx.LETRA(i).getText(), ctx.FRASE(i).getText());
-                }
+            int b = letterToNumber(ctx.LETRA(i).getText());
+            if(!(i== b)){
+                ProvLingSemanticUtils.addSemanticError(ctx.LETRA(i).getSymbol(), "Letra não é a letra adequada ");
+            }else{ 
+                    if(local_table.existsequal(ctx.FRASE(i).getText())){
+                        ProvLingSemanticUtils.addSemanticError(ctx.FRASE(i).getSymbol(), "existe uma alternativa exatamente igual");
+                    }else{
+                        local_table.add(ctx.LETRA(i).getText(), ctx.FRASE(i).getText());
+                    }
             }
-
+            
         }
 
         return super.visitAlternativas(ctx);
@@ -154,8 +155,8 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     @Override
     public Void visitExplicacoes(ProvLingParser.ExplicacoesContext ctx){
         for(int i=0; i<ctx.LETRA().size(); i++){
-             if(!local_table.exists(ctx.LETRA(i).getText())){
-                ProvLingSemanticUtils.addSemanticError(ctx.start, "letra explicada não está nas alternativas");
+             if(! (i == letterToNumber(ctx.LETRA(i).getText()))){
+
              }
         }
        

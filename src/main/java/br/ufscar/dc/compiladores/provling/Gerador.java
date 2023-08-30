@@ -1,8 +1,11 @@
 package br.ufscar.dc.compiladores.provling;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 
 import com.opencsv.CSVWriter;
 
@@ -41,10 +44,11 @@ public class Gerador  extends ProvLingBaseVisitor<Void> {
        
         try {
            
-            FileWriter outputfile = new FileWriter(file);
-    
+            
+            FileOutputStream outputStream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8) ;
            
-            CSVWriter writer = new CSVWriter(outputfile);
+            CSVWriter writer = new CSVWriter(outputStreamWriter);
     
             
             String[] header = { "prova", "questao" , "qtde_alternativas", "enunciado", "resposta" };
@@ -114,10 +118,10 @@ public class Gerador  extends ProvLingBaseVisitor<Void> {
        
         try {
            
-            FileWriter outputfile2 = new FileWriter(file2);
-    
+            FileOutputStream outputStream2 = new FileOutputStream(file2);
+            OutputStreamWriter outputStreamWriter2 = new OutputStreamWriter(outputStream2, StandardCharsets.UTF_8) ;
            
-            CSVWriter writer2 = new CSVWriter(outputfile2);
+            CSVWriter writer2 = new CSVWriter(outputStreamWriter2);
             
 
             if(ctx.explicacoes()!= null){
