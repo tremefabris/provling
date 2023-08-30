@@ -221,11 +221,14 @@ public class ProvBuilder {
             ._addlr("%-------------------Disciplina e Professor"                                        )
             ._add("\\textbf{Docente(s): \\docente"                                                      );
 
-        String[] _trailing_text = {", \\docente", "} \\\\[8pt]"};
         for (Integer i = 0; i < this.docentes.size(); i++) {
             String _letra = String.valueOf((char)(65 + i));
-            this._addr(_letra)
-                ._add( _trailing_text[i]);
+            
+            this._add(_letra);
+            if (i != this.docentes.size() - 1)
+                this._add(", \\docente");                
+            else
+                this._add("} \\\\[8pt]");
         }
         this._endl();
 
