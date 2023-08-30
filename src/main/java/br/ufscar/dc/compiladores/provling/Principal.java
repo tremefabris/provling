@@ -41,17 +41,17 @@ public class Principal {
                 System.out.println("An OTHER different error occurred.");
                 System.exit(-1);
             }
-            
+
 
             }else{
                 if (!outFile.isDirectory()){
                     //outFile.createNewFile();
                     if (!outFile.exists()){
-                        System.out.println("não foi criado");
+                        System.out.println("não foi criado o arquivo");
                     }
                     boolean created = outFile.mkdirs();
                     if(!created){
-                        System.out.println("aqui gui.");
+                        System.out.println("não foi criado o diretorio");
                         System.exit(-1);
                     }
                     
@@ -79,7 +79,6 @@ public class Principal {
 
             /* Creating output file to write results */
             String outputFilename = args[1];
-            System.out.println(outputFilename);
             guaranteeExistingDirectory(outputFilename);
             //PrintWriter outputWriter = new PrintWriter(outputFilename, "UTF-8");
 
