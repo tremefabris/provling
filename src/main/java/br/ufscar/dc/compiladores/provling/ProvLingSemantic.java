@@ -157,7 +157,7 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     public Void visitConfig_prova(ProvLingParser.Config_provaContext ctx) {
 
         for (ProvLingParser.ConfigsContext cctx : ctx.configs()) {
-            super.visitConfigs(cctx);
+            this.visitConfigs(cctx);
         }
 
         pb.addQuestions();
@@ -168,6 +168,7 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         }
         catch (Exception e) {
 
+            // TODO: Defer the logging to semantic error handler
             System.out.println(" LOG :: Couldn't generate TeX file");
             e.printStackTrace();
             SemanticErrorHandler.addError(
