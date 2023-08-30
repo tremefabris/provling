@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+
 public class ProvBuilder {
 
     /////////////////////////////////////////////////////////////////////////
@@ -305,7 +310,6 @@ public class ProvBuilder {
         this._addlr("%=========================================================")
             ._addlr("%-------------------FIM DA PROVA"                          )
             ._addlr("%=========================================================")
-            ._addlr("\\end{thebibliography}"                                    )
             ._addlr("\\end{document}"                                           )
             ._endl();
     }
@@ -333,6 +337,35 @@ public class ProvBuilder {
         this.diretrizes.put(num, diretriz);
     }
     
+    // TODO: Add proper error handling
+    // TODO: Add folder path treatment
+    // TODO: Check whether path truly exists
+    // TODO: Add argument for execution of this command
+    public void generateTexFile() throws IOException {  
+
+        System.out.println(" LOG :: Generating TeX file...");
+
+        String file_path = this.prova_folder.substring(
+            0,
+            this.prova_folder.lastIndexOf("/") + 1
+        ) + this.prova_id + ".tex";
+
+        System.out.println(" LOG :: File path: " + file_path);
+
+        File tex_file = new File(file_path);
+        tex_file.createNewFile();
+        PrintWriter pw = new PrintWriter(tex_file, "UTF-8");
+
+        pw.print(this.prova_content);
+
+        System.out.println(" LOG :: TeX file generated successfully");
+
+        pw.close();
+    }
+
+    // TODO: Add argument for execution of this command
+    public void generatePdfFromTex() {
+    }
 
     /////////////////////////////////////////////////////////////////////////
     //  DEBUG FUNCTIONS

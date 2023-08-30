@@ -163,6 +163,20 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         pb.addQuestions();
         pb.addEnding();
 
+        try {
+            pb.generateTexFile();
+        }
+        catch (Exception e) {
+
+            System.out.println(" LOG :: Couldn't generate TeX file");
+            e.printStackTrace();
+            SemanticErrorHandler.addError(
+                null,
+                "TeX file was unable to be generated"
+            );
+
+        }
+
         return null;
     }
 
