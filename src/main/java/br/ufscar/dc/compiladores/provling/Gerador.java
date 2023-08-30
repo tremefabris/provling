@@ -11,23 +11,23 @@ public class Gerador  extends ProvLingBaseVisitor<Void> {
     private String caminho;
     private String caminho_prova;
     StringBuilder saida;
-    SymbolTable table;
-    Scopes scopes;
+    
+    
 
 
     public Gerador(){
 
         saida = new StringBuilder();
-        this.scopes = new Scopes();
-        this.table = new SymbolTable();
+        
+        
 
     }
 
     public Gerador(String caminho){
 
         saida = new StringBuilder();
-        this.scopes = new Scopes();
-        this.table = new SymbolTable();
+        
+        
         this.caminho = caminho;
 
     }
