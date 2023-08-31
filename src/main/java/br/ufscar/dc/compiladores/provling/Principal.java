@@ -88,8 +88,8 @@ public class Principal {
             // System.out.print(prova);
             outputFile.print(prova);
 
-            for (String e : SemanticErrorHandler.errors)
-                System.out.println(e);
+            for (String L : Logger.logs)
+                System.out.println(L);
 
 
             outputFile.close();
