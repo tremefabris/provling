@@ -16,6 +16,7 @@ public class ProvBuilder {
     //  VARIABLES
     /////////////////////////////////////////////////////////////////////////
 
+
     private String main_folder;
     private boolean main_folder_set = false;
 
@@ -24,9 +25,6 @@ public class ProvBuilder {
 
     private String prova_folder;
  
-    private String prova_content;
-    
-
     // header settings
     private String instituicao;
     private String disciplina;
@@ -34,15 +32,16 @@ public class ProvBuilder {
     private Map<String, String> diretrizes = null;
 
     // exam settings
-    private Integer tipos_prova;
-    // private boolean tipos_prova_set = false;
+    private Integer tipos_prova = null;
+    private Integer questoes_por_prova = null;
+    private Integer alunos_total = null;
 
-    private Integer questoes_por_prova;
-    // private boolean questoes_por_prova_set = false;
+    // text buffers
+    private String prova_buffer;
+    private List<String> conjuntos_questoes;
+    private List<String> final_provas;
 
-    private Integer alunos_total;
-    // private boolean alunos_total_set = false;
-
+    private boolean built = false;
 
 
     /////////////////////////////////////////////////////////////////////////
@@ -50,7 +49,7 @@ public class ProvBuilder {
     /////////////////////////////////////////////////////////////////////////
 
     public ProvBuilder() {
-        this.prova_content = new String("");
+        this.prova_buffer = new String("");
     }
     public ProvBuilder(String main_folder, String prova_id) {
         this.main_folder = main_folder;
@@ -58,7 +57,7 @@ public class ProvBuilder {
 
         this.prova_folder = main_folder + prova_id;
 
-        this.prova_content = new String("");
+        this.prova_buffer = new String("");
     }
 
 
@@ -86,14 +85,67 @@ public class ProvBuilder {
     public void withParticipants(Integer num_participants) {
         this.alunos_total = num_participants;
     }
-    
+
+    // TODO: Throw exception when tipos_prova or questoes_por_prova is null
+    private void _setupQuestionConfigs(QuestionManager qm) {
+
+        Integer max_questions = qm.totalQuestions();
+        Integer possible_types = qm.possibleCombinations(this.questoes_por_prova);
+
+        if (possible_types == -1) {
+            
+            String _error_msg = "config pede " + this.questoes_por_prova +
+                                " questões por prova, mas o máximo possivel é " +
+                                max_questions;
+
+            Logger.add(
+                null,
+                _error_msg,
+                Logger.Type.WARNING
+            );
+            Logger.add(
+                null,
+                "usando " + max_questions + " questões",
+                Logger.Type.WARNING
+            );
+
+            this.questoes_por_prova = max_questions;
+            possible_types = 1;
+        }
+
+        if (this.tipos_prova > possible_types) {
+
+            String _error_msg = "config pede " + this.tipos_prova +
+                                " tipo(s) diferente(s) de prova, mas só é possível " +
+                                "ter " + possible_types + " tipo(s)";
+
+            Logger.add(
+                null,
+                _error_msg,
+                Logger.Type.WARNING
+            );
+            Logger.add(
+                null,
+                "gerando " + possible_types + " tipo(s) de prova",
+                Logger.Type.WARNING
+            );
+
+            this.tipos_prova = possible_types;
+        }
+    }
+    private void _initConjuntoQuestoes(Integer num_types) {
+        this.conjuntos_questoes = new ArrayList<String>(num_types);
+        for (Integer i = 0; i < num_types; i++)
+            this.conjuntos_questoes.add(new String(""));
+    }
+
 
     /////////////////////////////////////////////////////////////////////////
     //  TEXT-ADDING FUNCTIONS
     /////////////////////////////////////////////////////////////////////////
 
     private void _add(String _t) {
-        this.prova_content += _t;
+        this.prova_buffer += _t;
     }
     private ProvBuilder _addr(String _t) {
         this._add(_t);
@@ -282,39 +334,44 @@ public class ProvBuilder {
             ._addlr("\\rule[1ex]{\\textwidth}{1pt}"                             )
             ._endl();
     }
-    // TODO: Follow the configurations established
-    // TODO: by the user
     public void addQuestions() {
         QuestionManager qm = QuestionManager.FromCSV(this.prova_folder);
+
+        this._setupQuestionConfigs(qm);
+        this._initConjuntoQuestoes(this.tipos_prova);
+        List<List<Integer>> q_combs = qm.generateCombinations(
+            this.tipos_prova,
+            this.questoes_por_prova
+        );
 
         this._addlr("\\begin{questions}"                                        )
             ._addlr("%=========================================================")
             ._addlr("%-------------------QUESTÕES DA PROVA"                     )
             ._addl( "%=========================================================");
-        
-        for (Integer i = 0; i < qm.totalQuestions(); i++) {
 
-            this._addlr("\\question[1] " + qm.getEnunciadoFromQuestion(i))
-                ._addl( "\\begin{choices}"                            );
+        for (Integer i = 0; i < this.tipos_prova; i++) {
+            String q_buffer = new String("");
 
-            for (String alt : qm.getAlternativasFromQuestion(i)) {
-                this._addl("\\choice " + alt);
+            for (Integer q_num : q_combs.get(i)) {
+                q_buffer += "\\question[1] " + qm.getEnunciadoFromQuestion(q_num) + "\n";
+                q_buffer += "\\begin{choices}" + "\n";
+
+                for (String alt : qm.getAlternativasFromQuestion(q_num)) {
+                    q_buffer += "\\choice " + alt + "\n";
+                }
+
+                q_buffer += "\\end{choices}" + "\n\n";
             }
-
-            this._addlr("\\end{choices}")
-                ._endl();
-
+            q_buffer += "\\end{questions}" + "\n\n";
+            
+            this.conjuntos_questoes.set(i, q_buffer);
         }
-
-        this._addlr("\\end{questions}")
-            ._endl();
     }
-    public void addEnding() {
-        this._addlr("%=========================================================")
-            ._addlr("%-------------------FIM DA PROVA"                          )
-            ._addlr("%=========================================================")
-            ._addlr("\\end{document}"                                           )
-            ._endl();
+    private String _generateEnding() {
+        return "%=========================================================" + "\n" +
+               "%-------------------FIM DA PROVA"                           + "\n" +
+               "%=========================================================" + "\n" +
+               "\\end{document}"                                            + "\n";                                           
     }
 
     /////////////////////////////////////////////////////////////////////////
@@ -340,45 +397,112 @@ public class ProvBuilder {
         this.diretrizes.put(num, diretriz);
     }
     
+    public void build() {
+        Logger.add(
+            null,
+            "buildando prova...",
+            Logger.Type.INFO
+        );
+
+        this.final_provas = new ArrayList<String>(this.tipos_prova);
+        for (Integer i = 0; i < this.tipos_prova; i++) {
+            this.final_provas.add(
+                new String(
+                    this.prova_buffer + 
+                    this.conjuntos_questoes.get(i) +
+                    this._generateEnding()
+                )
+            );
+        }
+
+        Logger.add(
+            null,
+            "prova buildada com sucesso!",
+            Logger.Type.INFO
+        );
+
+        this.built = true;
+    }
+
     // TODO: Add proper error handling
     // TODO: Add folder path treatment
     // TODO: Check whether path truly exists
     // TODO: Add argument for execution of this command
     public void generateTexFile() throws IOException {  
 
-        System.out.println(" LOG :: Generating TeX file...");
+        if (!this.built)
+            this.build();
 
-        String file_path = this.prova_folder.substring(
+        Logger.add(
+            null,
+            "gerando arquivo TeX...",
+            Logger.Type.INFO
+        );
+
+        String common_file_path = this.prova_folder.substring(
             0,
             this.prova_folder.lastIndexOf("/") + 1
-        ) + this.prova_id + ".tex";
+        ) + this.prova_id;
 
-        System.out.println(" LOG :: File path: " + file_path);
+        for (Integer i = 0; i < this.final_provas.size(); i++) {
 
-        File tex_file = new File(file_path);
-        tex_file.createNewFile();
-        PrintWriter pw = new PrintWriter(tex_file, "UTF-8");
+            String specific_file_path = common_file_path +
+                                        "_tipo" + i + ".tex";
+            
+            Logger.add(
+                null,
+                "caminho do arquivo: " + specific_file_path,
+                Logger.Type.INFO
+            );
+        
+            File tex_file = new File(specific_file_path);
+            tex_file.createNewFile();
+            PrintWriter pw = new PrintWriter(tex_file, "UTF-8");
 
-        pw.print(this.prova_content);
+            pw.print(this.final_provas.get(i));
+            pw.close();
 
-        System.out.println(" LOG :: TeX file generated successfully");
-
-        pw.close();
+            Logger.add(
+                null,
+                "arquivo TeX gerado com sucesso!",
+                Logger.Type.INFO
+            );
+        }
     }
 
+    // TODO: Implement
     // TODO: Add argument for execution of this command
-    public void generatePdfFromTex() {
-    }
+    public void generatePdfFromTex() {}
 
     /////////////////////////////////////////////////////////////////////////
     //  DEBUG FUNCTIONS
     /////////////////////////////////////////////////////////////////////////
 
     public void __debugProvaContent() {
-        System.out.print(prova_content);
+        System.out.print(prova_buffer);
     }
 
     public String __debugGetProva() {
-        return this.prova_content;
+        return this.prova_buffer;
+    }
+
+    public void __debugConjuntoQuestoes() {
+        System.out.println(" :: __debugConjuntoQuestoes :: ");
+
+        for (String c_q : this.conjuntos_questoes)
+            System.out.println(c_q);
+
+        System.out.println(" :: __debugConjuntoQuestoes :: ");
+    }
+
+    public void __debugBuild() {
+        System.out.println(" :: __debugBuild :: ");
+
+        this.build();
+
+        for (String prova : final_provas)
+            System.out.println(prova + "\n");
+
+        System.out.println(" :: __debugBuild :: ");
     }
 }

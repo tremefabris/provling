@@ -128,9 +128,10 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
                 
                 if (last_num != null)
                     if (!this._areOrderedCorrectly(last_num, curr_num))
-                        SemanticErrorHandler.addWarning(
+                        Logger.add(
                             dctx.getStart(),
-                            "diretriz " + curr_num + " está desordenada"    
+                            "diretriz " + curr_num + " está desordenada",    
+                            Logger.Type.WARNING
                         );
 
                 last_num = curr_num;
@@ -161,21 +162,19 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         }
 
         pb.addQuestions();
-        pb.addEnding();
 
         try {
             pb.generateTexFile();
         }
         catch (Exception e) {
-
-            // TODO: Defer the logging to semantic error handler
-            System.out.println(" LOG :: Couldn't generate TeX file");
-            e.printStackTrace();
-            SemanticErrorHandler.addError(
+            Logger.add(
                 null,
-                "TeX file was unable to be generated"
+                "não foi possível gerar arquivo TeX",
+                Logger.Type.ERROR
             );
-
+            e.printStackTrace();
+            
+            // TODO: Throw exception for better error handling
         }
 
         return null;

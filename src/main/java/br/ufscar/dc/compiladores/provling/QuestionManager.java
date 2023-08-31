@@ -2,6 +2,9 @@ package br.ufscar.dc.compiladores.provling;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Set;
+import java.util.HashSet;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -163,7 +166,88 @@ public class QuestionManager {
     public List<String> getAlternativasFromQuestion(Integer idx) {
         return this.questoes.get(idx).alternativas;
     }
-    
+
+    /////////////////////////////////////////////////////////////////////////
+    //  COMBINATORIC FUNCS
+    //  TODO: Refactor all of this in a CombinatoricsEngine class
+    /////////////////////////////////////////////////////////////////////////
+
+    public Integer possibleCombinations(Integer questions) {
+
+        Integer total = this.questoes.size();
+        
+        if (questions > total) {
+            return -1;
+        }
+        
+        if (total == questions) {
+            return 1;
+        }
+
+        Integer prod_total = 1;
+        for (Integer i = 1; i <= total; i++)
+            prod_total *= i;
+
+        Integer prod_questions = 1;
+        for (Integer i = 1; i <= questions; i++)
+            prod_questions *= i;
+
+        Integer prod_diff = 1;
+        for (Integer i = 1; i <= (total - questions); i++)
+            prod_diff *= 1;
+        
+        return ( prod_total / (prod_questions * prod_diff) );
+    }
+    // TODO: Treat the return of this.possibleCombinations properly
+    // TODO: Add different algorithms for generation (now only has random)
+    // TODO: Add possibility of final list to be ordered
+    // TODO: Maybe it's better to use Set<Integer> instead of List<Integer>?
+    public List<List<Integer>> generateCombinations(Integer num_types, Integer num_questions) {
+
+        List<List<Integer>> combs = this._initListOfCombinations(num_types, num_questions);
+
+        do {
+            for (List<Integer> prova_type : combs) {
+                prova_type.clear();
+                prova_type.addAll(this._generateCombinationRandom(num_questions));
+            }
+        } while(this._existDuplicates(combs));
+        
+        return combs;
+    }
+
+
+    private List<List<Integer>> _initListOfCombinations(Integer num_types, Integer num_questions) {
+
+        List<List<Integer>> combs = new ArrayList<List<Integer>>(num_types);
+        for (Integer i = 0; i < num_types; i++)
+            combs.add(i, new ArrayList<Integer>(num_questions));
+        
+        return combs;
+    }
+    private Set<Integer> _generateCombinationRandom(Integer num_questions) {
+
+        Integer max_questions = this.questoes.size();
+        Random prng = new Random();
+        Set<Integer> _comb = new HashSet<Integer>(num_questions);
+
+        do {
+            Integer _n = prng.nextInt(max_questions);
+            _comb.add(_n);
+        } while(_comb.size() < num_questions);
+
+        return _comb;
+    }
+    // TODO: Time-inefficient
+    // TODO: If Lists are unordered but contain same elements, this won't catch it
+    private boolean _existDuplicates(List<List<Integer>> combinations) {
+        for (Integer i = 0; i < combinations.size(); i++)
+            for (Integer j = i + 1; j < combinations.size(); j++)
+                if (combinations.get(i).equals(combinations.get(j)))
+                    return true;
+
+        return false;
+    }
 
     /////////////////////////////////////////////////////////////////////////
     //  HELPER FUNCS
@@ -207,5 +291,19 @@ public class QuestionManager {
         }
 
         System.out.println("\n :: __debugQuestions :: \n");
+    }
+
+    public void __debugCombinationGeneration(Integer num_types, Integer num_questions) {
+        System.out.println(" :: __debugCombinationGeneration :: ");
+        
+        List<List<Integer>> _combs = this.generateCombinations(num_types, num_questions);
+
+        System.out.println(" :: COMBINATIONS :: ");
+        
+        for (List<Integer> _c : _combs) {
+            System.out.println(_c);
+        }
+
+        System.out.println(" :: __debugCombinationGeneration :: ");
     }
 }
