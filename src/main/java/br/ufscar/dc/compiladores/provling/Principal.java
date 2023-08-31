@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.InvalidPathException;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -17,7 +18,7 @@ import br.ufscar.dc.compiladores.provling.ProvLingParser.ProgramaContext;
 
 public class Principal {
 
-     static PrintWriter setupOutputWriter(Path output_file) {
+    static PrintWriter setupOutputWriter(Path output_file) {
         try {
             File out_file = output_file.toFile();
             out_file.createNewFile();
@@ -25,12 +26,10 @@ public class Principal {
             return pw;
         }
         catch (IOException e) {
-            Logger.add(
-                null,
-                "erro ocorreu ao tentar abrir/criar arquivo " + output_file.toString(),
-                Logger.Type.ERROR
+            throw new InvalidPathException(
+                output_file.toString(),
+                "não foi possível criar arquivo de output (o caminho está correto?)"
             );
-            return null;
         }
     }
 
@@ -45,6 +44,15 @@ public class Principal {
             0,
             path_arg.lastIndexOf("/") + 1
         );
+    }
+
+    static void guaranteeFileExistence(Path path) {
+        if (!path.toFile().exists()) {
+            throw new InvalidPathException(
+                path.toString(),
+                "arquivo não encontrado (ele existe mesmo?)"
+            );
+        }
     }
 
     static void __debugLexer(ProvLingLexer lex) {
@@ -70,8 +78,8 @@ public class Principal {
 
             // TODO: Receive folder to dump .tex
 
-            // TODO: Handle InvalidPathException
             Path input_path = Paths.get(args[0]).toAbsolutePath();
+            guaranteeFileExistence(input_path);
 
             CharStream cs = CharStreams.fromPath(input_path);
             ProvLingLexer lex = new ProvLingLexer(cs);
@@ -84,7 +92,6 @@ public class Principal {
             ProgramaContext tree = parser.programa();
             ProvLingSemantic sem = new ProvLingSemantic("tests/");
 
-            // TODO: Handle InvalidPathException
             Path output_path = Paths.get(args[1]).toAbsolutePath();
             PrintWriter output_writer = setupOutputWriter(output_path);
             if (output_writer == null) {
@@ -97,7 +104,6 @@ public class Principal {
             String prova = sem.getProva();
 
             // TODO: Do something with this
-            // System.out.print(prova);
             output_writer.print(prova);
 
             output_writer.close();
@@ -140,7 +146,7 @@ public class Principal {
          */
         catch (Exception e) {
 
-            System.out.println("Oops, something bad is happening...");
+            // System.out.println("Oops, something bad is happening...");
 
             Logger.add(
                 null,

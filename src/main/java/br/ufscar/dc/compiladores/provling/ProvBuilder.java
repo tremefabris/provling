@@ -20,7 +20,6 @@ public class ProvBuilder {
     /////////////////////////////////////////////////////////////////////////
 
 
-    // TODO: Make folders absolute; use some third-party library
     private Path data_folder;
     private boolean data_folder_set = false;
 
@@ -84,8 +83,8 @@ public class ProvBuilder {
 
             if (!this.prova_data_path.toFile().exists())
                 throw new InvalidPathException(
-                    this.prova_data_path.toString(),
-                    "impossível acessar arquivo (ele existe mesmo?)"
+                    "",
+                    "prova " + this.prova_id + " não encontrada (o ID está certo?)"
                 );
         }
     }
@@ -100,7 +99,6 @@ public class ProvBuilder {
         this.alunos_total = num_participants;
     }
 
-    // TODO: Add warning if alunos_total isn't specified
     private void _setupQuestionConfigs(QuestionManager qm) {
 
         if (this.questoes_por_prova == null) {
@@ -108,6 +106,13 @@ public class ProvBuilder {
         }
         else if (this.tipos_prova == null) {
             throw new NullPointerException("config TIPOS deve ser especificada");
+        }
+        if (this.alunos_total == null) {
+            Logger.add(
+                null,
+                "config ALUNOS não usada",
+                Logger.Type.WARNING
+            );
         }
 
         Integer max_questions = qm.totalQuestions();
