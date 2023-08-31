@@ -24,8 +24,8 @@ public class Logger {
     public static void add(Token token, String msg, Type type) {
 
         String token_line = token == null ?
-                                "Geral" :
-                                "Linha " + token.getLine();
+                                "" :
+                                "Linha " + token.getLine() + ": ";
 
         String type_str = null;
         switch (type) {
@@ -43,7 +43,7 @@ public class Logger {
         }
 
         logs.add(String.format(
-            "%s :: %s: %s", type_str, token_line, msg 
+            "%s :: %s%s", type_str, token_line, msg 
         ));
     }
 

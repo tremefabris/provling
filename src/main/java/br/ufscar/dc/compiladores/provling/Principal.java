@@ -3,6 +3,8 @@ package br.ufscar.dc.compiladores.provling;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -35,6 +37,13 @@ public class Principal {
         parser.addErrorListener(sel);
     }
 
+    static String getFolderFromArgument(String path_arg) {
+        return path_arg.substring(
+            0,
+            path_arg.lastIndexOf("/") + 1
+        );
+    }
+
     static void __debugLexer(ProvLingLexer lex) {
         Token t = null;
 
@@ -56,10 +65,10 @@ public class Principal {
 
         try {
             
-            CharStream cs = CharStreams.fromFileName(args[0]);
-            ProvLingLexer lex = new ProvLingLexer(cs);
+            Path input_file = Paths.get(args[0]).toAbsolutePath();
 
-            // __debugLexer(lex);
+            CharStream cs = CharStreams.fromPath(input_file);
+            ProvLingLexer lex = new ProvLingLexer(cs);
 
             CommonTokenStream tokens = new CommonTokenStream(lex);
             ProvLingParser parser = new ProvLingParser(tokens);
@@ -67,6 +76,7 @@ public class Principal {
             setupSyntaxErrorListener(parser);
 
             ProgramaContext tree = parser.programa();
+            // TODO: Fix -- breaks when using different folder
             ProvLingSemantic sem = new ProvLingSemantic();
 
             PrintWriter outputFile = setupOutputFile(args[1]);
@@ -74,17 +84,12 @@ public class Principal {
                 System.exit(-1);
             }
 
-            try {
-                sem.visitPrograma(tree);
-            }
-            // TODO: Proper exception handling for better error messages
-            catch (Exception e) {
-                System.out.println("Hey, remember me?");
-                e.printStackTrace();
-            }
+            sem.visitPrograma(tree);
 
+            // TODO: Remove this
             String prova = sem.getProva();
 
+            // TODO: Do something with this
             // System.out.print(prova);
             outputFile.print(prova);
 
@@ -104,10 +109,37 @@ public class Principal {
             );
 
         }
-
+        /*
+         * Errors with file opening, CSVReader breaking, etc...
+         */
         catch (IOException e) {
             
-            e.printStackTrace();
+            Logger.add(
+                null,
+                "erro de I/O aconteceu",
+                Logger.Type.ERROR
+            );
+            Logger.add(
+                null,
+                "retorno da JVM: " + e.getMessage(),
+                Logger.Type.ERROR
+            );
+
+        }
+        /*
+         * All other exceptions
+         * 
+         * These are most likely exceptions thrown by us in the semantic visitor
+         */
+        catch (Exception e) {
+
+            // System.out.println("Hey, remember me?");
+            
+            Logger.add(
+                null,
+                e.getMessage(),
+                Logger.Type.ERROR
+            );
 
         }
 

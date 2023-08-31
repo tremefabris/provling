@@ -14,9 +14,11 @@ public class ProvBuilder {
 
     /////////////////////////////////////////////////////////////////////////
     //  VARIABLES
+    //  TODO: Rethink variable names -- they are very bad right now
     /////////////////////////////////////////////////////////////////////////
 
 
+    // TODO: Make folders absolute; use some third-party library
     private String main_folder;
     private boolean main_folder_set = false;
 
@@ -47,6 +49,7 @@ public class ProvBuilder {
     /////////////////////////////////////////////////////////////////////////
     //  CONSTRUCTORS AND SETUP-FUNCS
     /////////////////////////////////////////////////////////////////////////
+
 
     public ProvBuilder() {
         this.prova_buffer = new String("");
@@ -86,8 +89,14 @@ public class ProvBuilder {
         this.alunos_total = num_participants;
     }
 
-    // TODO: Throw exception when tipos_prova or questoes_por_prova is null
     private void _setupQuestionConfigs(QuestionManager qm) {
+
+        if (this.questoes_por_prova == null) {
+            throw new NullPointerException("config QUESTOES deve ser especificada");
+        }
+        else if (this.tipos_prova == null) {
+            throw new NullPointerException("config TIPOS deve ser especificada");
+        }
 
         Integer max_questions = qm.totalQuestions();
         Integer possible_types = qm.possibleCombinations(this.questoes_por_prova);
@@ -296,6 +305,7 @@ public class ProvBuilder {
             ._addlr("\\end{center}"                                                   )
             ._endl();
     }
+    // TODO: Permit case where no guideline is provided
     public void addGuidelines() {
         this._addlr("%========================================================="              )
             ._addlr("%-------------------DIRETRIZES"                                          )
@@ -424,7 +434,6 @@ public class ProvBuilder {
         this.built = true;
     }
 
-    // TODO: Add proper error handling
     // TODO: Add folder path treatment
     // TODO: Check whether path truly exists
     // TODO: Add argument for execution of this command

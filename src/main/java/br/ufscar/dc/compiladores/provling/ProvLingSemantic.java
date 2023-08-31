@@ -1,5 +1,7 @@
 package br.ufscar.dc.compiladores.provling;
 
+import java.io.IOException;
+
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
@@ -8,12 +10,31 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     //  VARIABLES
     /////////////////////////////////////////////////////////////////////////
 
+
     // CONFIGURATION CONSTANTS
-    String MAIN_FOLDER = "tests/";  // TODO: make this the given file's folder (args[1])
+    // TODO: Make folders absolute; use some third-party library
+    String MAIN_FOLDER;
     
     // INTERNAL RUNTIME INFORMATION
     String current_prova_id;
     ProvBuilder pb;
+
+
+    /////////////////////////////////////////////////////////////////////////
+    //  CONSTRUCTORS
+    /////////////////////////////////////////////////////////////////////////
+
+
+    public ProvLingSemantic() {
+        this.MAIN_FOLDER = "tests/";
+    }
+    public ProvLingSemantic(String main_folder_path) {
+        this.MAIN_FOLDER = main_folder_path;
+    }
+    public void setMainFolder(String main_folder_path) {
+        this.MAIN_FOLDER = main_folder_path;
+    }
+
 
     /////////////////////////////////////////////////////////////////////////
     //  HELPER FUNCTIONS
@@ -161,20 +182,33 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
             this.visitConfigs(cctx);
         }
 
-        pb.addQuestions();
+        try {
+            pb.addQuestions();
+        }
+        catch (NullPointerException npe) {    
+            throw new NullPointerException(
+                "Linha " + ctx.getStart().getLine() + ": " +
+                npe.getMessage()
+            );
+        }
 
         try {
             pb.generateTexFile();
         }
-        catch (Exception e) {
+        catch (IOException e) {
+
+            // Couldn't throw IOException, had to do this here
             Logger.add(
                 null,
                 "não foi possível gerar arquivo TeX",
                 Logger.Type.ERROR
             );
-            e.printStackTrace();
-            
-            // TODO: Throw exception for better error handling
+            Logger.add(
+                null,
+                "retorno da JVM: " + e.getMessage(),
+                Logger.Type.ERROR
+            );
+
         }
 
         return null;
