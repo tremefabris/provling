@@ -17,17 +17,17 @@ public class SyntaxErrorListener implements ANTLRErrorListener {
     @Override
     public void reportAmbiguity(Parser arg0, DFA arg1, int arg2, int arg3, boolean arg4, BitSet arg5,
             ATNConfigSet arg6) {
-        // Not necessary for now
+        // Not necessary
     }
 
     @Override
     public void reportAttemptingFullContext(Parser arg0, DFA arg1, int arg2, int arg3, BitSet arg4, ATNConfigSet arg5) {
-        // Not necessary for now
+        // Not necessary
     }
 
     @Override
     public void reportContextSensitivity(Parser arg0, DFA arg1, int arg2, int arg3, int arg4, ATNConfigSet arg5) {
-        // Not necessary for now        
+        // Not necessary        
     }
 
     @Override
@@ -49,7 +49,7 @@ public class SyntaxErrorListener implements ANTLRErrorListener {
         }
 
         errorMessage = "Linha " + line
-                       + ": erro sintatico proximo a " + t_text;
+                       + ": erro sintático próximo a " + t_text;
 
         throw new ParseCancellationException(errorMessage);
     }

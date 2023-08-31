@@ -88,10 +88,6 @@ public class Principal {
             // System.out.print(prova);
             outputFile.print(prova);
 
-            for (String L : Logger.logs)
-                System.out.println(L);
-
-
             outputFile.close();
 
         }
@@ -101,7 +97,11 @@ public class Principal {
          */
         catch (ParseCancellationException pce) {
 
-            System.out.println(pce.getMessage());
+            Logger.add(
+                null,
+                pce.getMessage(),
+                Logger.Type.ERROR
+            );
 
         }
 
@@ -111,5 +111,13 @@ public class Principal {
 
         }
 
+        finally {
+
+            for (String L : Logger.logs)
+                System.out.println(L);
+        
+        }
+            
+        
     }
 }
