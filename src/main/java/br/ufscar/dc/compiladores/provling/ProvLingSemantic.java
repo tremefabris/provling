@@ -23,7 +23,7 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return frase.substring(1, frase.length() - 1);
     }
 
-    private boolean _areOrderedCorrectly(String first_num, String sec_num) {
+    private boolean _diretrizesOrderedCorrectly(String first_num, String sec_num) {
 
         Double first = Double.parseDouble(first_num);
         Double second = Double.parseDouble(sec_num);
@@ -127,7 +127,7 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
                                 dctx.NUM_REAL().getText();
                 
                 if (last_num != null)
-                    if (!this._areOrderedCorrectly(last_num, curr_num))
+                    if (!this._diretrizesOrderedCorrectly(last_num, curr_num))
                         Logger.add(
                             dctx.getStart(),
                             "diretriz " + curr_num + " está desordenada",    
