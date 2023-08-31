@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -51,7 +52,7 @@ public class QuestionManager {
     //  VARIABLES
     /////////////////////////////////////////////////////////////////////////
 
-    private String prova_path;
+    private Path data_path;
     private String prova_id;
 
     private List<Question> questoes;
@@ -60,20 +61,17 @@ public class QuestionManager {
     //  CONSTRUCTORS
     /////////////////////////////////////////////////////////////////////////
 
-    private QuestionManager(String csv_path) {
-        this.prova_path = csv_path;
+    private QuestionManager(Path csv_path) {
+        this.data_path = csv_path;
         this.prova_id = this._getProvaIdFromPath(csv_path);
     }
 
-    public static QuestionManager FromCSV(String csv_path) {
+    public static QuestionManager FromCSV(Path csv_path) {
     
         QuestionManager self = new QuestionManager(csv_path);
 
-        // TODO: Add folder path treatment
-        // TODO: Check whether path truly exists
-
-        self.questoes = self.readQuestionsFromCSV(csv_path, true);
-        self.buildQuestions(csv_path, true);
+        self.questoes = self.readQuestions(true);
+        self.buildQuestions(true);
 
         return self;
     }
@@ -82,28 +80,27 @@ public class QuestionManager {
     //  CSV-READING FUNCS
     /////////////////////////////////////////////////////////////////////////
 
-    private List<Question> readQuestionsFromCSV(String csv_path, boolean has_header) {
-
-        // TODO: Add folder path treatment
-        // TODO: Check whether path truly exists
+    // TODO: Handle exceptions
+    private List<Question> readQuestions(boolean has_header) {
 
         try{
 
             List<Question> questoes = new ArrayList<Question>();
 
-            CSVReader reader = new CSVReaderBuilder(new FileReader(prova_path)).build();
-            String[] csvLine;
+            CSVReader reader = new CSVReaderBuilder(
+                               new FileReader(this.data_path.toString())).build();
+            String[] csv_line;
 
             if (has_header)
                 reader.skip(1);
 
-            while ((csvLine = reader.readNext()) != null) {
+            while ((csv_line = reader.readNext()) != null) {
 
-                String p_id = csvLine[0];
-                String q_id = csvLine[1];
-                String enun = csvLine[2];
-                Integer num_alt = Integer.parseInt(csvLine[3]);
-                String resp = csvLine[4];
+                String p_id = csv_line[0];
+                String q_id = csv_line[1];
+                String enun = csv_line[2];
+                Integer num_alt = Integer.parseInt(csv_line[3]);
+                String resp = csv_line[4];
 
                 questoes.add(
                     this.new Question(p_id, q_id, enun, resp, num_alt)
@@ -120,29 +117,27 @@ public class QuestionManager {
 
         return null;
     }
-
-    private void buildQuestions(String csv_path, boolean has_header) {
-
-        // TODO: Add folder path treatment
-        // TODO: Check whether path truly exists
+    // TODO: Handle exceptions
+    private void buildQuestions(boolean has_header) {
 
         try{
-            String question_folder = this._getQuestionFolderFromPath(csv_path);
+            Path question_folder = this._getQuestionFolderFromPath(this.data_path);
 
             for (Question q : this.questoes) {
-                String question_path = question_folder + q.question_id + ".csv";
+                Path question_path = question_folder.resolve(q.question_id + ".csv");
                 
-                CSVReader reader = new CSVReaderBuilder(new FileReader(question_path)).build();
-                String[] csvLine;
+                CSVReader reader = new CSVReaderBuilder(
+                                   new FileReader(question_path.toString())).build();
+                String[] csv_line;
 
                 if (has_header)
                     reader.skip(1);
 
-                while ((csvLine = reader.readNext()) != null) {
+                while ((csv_line = reader.readNext()) != null) {
 
-                    q.addAlternativa(csvLine[2]);
-                    if (csvLine.length > 3)
-                        q.addExplicacao(csvLine[3]);
+                    q.addAlternativa(csv_line[2]);
+                    if (csv_line.length > 3)
+                        q.addExplicacao(csv_line[3]);
 
                 }
             }
@@ -253,20 +248,13 @@ public class QuestionManager {
     //  HELPER FUNCS
     /////////////////////////////////////////////////////////////////////////
 
-    private String _getProvaIdFromPath(String path) {
-        return path.substring(
-            path.lastIndexOf("/") + 1,
-            path.length() - 4        // to remove the ".csv"
-        );
+    private String _getProvaIdFromPath(Path path) {
+        String prova_id = path.getFileName().toString();
+        return prova_id.substring(0, prova_id.lastIndexOf("."));
     }
 
-    private String _getQuestionFolderFromPath(String path) {
-        return path.substring(
-                    0,
-                    path.lastIndexOf("/") + 1   
-                ).concat(
-                    "." + this.prova_id + "/"
-                );
+    private Path _getQuestionFolderFromPath(Path path) {
+        return path.getParent().resolve("." + this.prova_id);
     }
 
     /////////////////////////////////////////////////////////////////////////

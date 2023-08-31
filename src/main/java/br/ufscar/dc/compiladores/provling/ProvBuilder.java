@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.InvalidPathException;
 
 
 public class ProvBuilder {
@@ -19,13 +21,13 @@ public class ProvBuilder {
 
 
     // TODO: Make folders absolute; use some third-party library
-    private String main_folder;
-    private boolean main_folder_set = false;
+    private Path data_folder;
+    private boolean data_folder_set = false;
 
     private String prova_id;
     private boolean prova_id_set = false;
 
-    private String prova_folder;
+    private Path prova_data_path;
  
     // header settings
     private String instituicao;
@@ -54,11 +56,12 @@ public class ProvBuilder {
     public ProvBuilder() {
         this.prova_buffer = new String("");
     }
-    public ProvBuilder(String main_folder, String prova_id) {
-        this.main_folder = main_folder;
+    // TODO: Adapt to data_folder (dump_folder) not same as prova_data_path's folders
+    public ProvBuilder(Path data_folder, String prova_id) {
+        this.data_folder = data_folder;
         this.prova_id = prova_id;
 
-        this.prova_folder = main_folder + prova_id;
+        this.prova_data_path = data_folder.resolve(prova_id + ".csv");
 
         this.prova_buffer = new String("");
     }
@@ -67,16 +70,24 @@ public class ProvBuilder {
     public void withProvaId(String prova_id) {
         this.prova_id = prova_id;
         this.prova_id_set = true;
-        this._setupProvaFolder();
+        this._setupDataPath();
     }
-    public void withMainFolder(String main_folder) {
-        this.main_folder = main_folder;
-        this.main_folder_set = true;
-        this._setupProvaFolder();
+    public void withDataFolder(Path data_folder) {
+        this.data_folder = data_folder;
+        this.data_folder_set = true;
+        this._setupDataPath();
     }
-    private void _setupProvaFolder() {  // TODO: Add folder path treatment
-        if (this.main_folder_set && this.prova_id_set)
-            this.prova_folder = main_folder + prova_id + ".csv";
+    // TODO: Handle InvalidPathException
+    private void _setupDataPath() {
+        if (this.data_folder_set && this.prova_id_set) {
+            this.prova_data_path = data_folder.resolve(prova_id + ".csv");
+
+            if (!this.prova_data_path.toFile().exists())
+                throw new InvalidPathException(
+                    this.prova_data_path.toString(),
+                    "impossível acessar arquivo (ele existe mesmo?)"
+                );
+        }
     }
 
     public void withTypes(Integer num_types) {
@@ -89,6 +100,7 @@ public class ProvBuilder {
         this.alunos_total = num_participants;
     }
 
+    // TODO: Add warning if alunos_total isn't specified
     private void _setupQuestionConfigs(QuestionManager qm) {
 
         if (this.questoes_por_prova == null) {
@@ -142,9 +154,9 @@ public class ProvBuilder {
             this.tipos_prova = possible_types;
         }
     }
-    private void _initConjuntoQuestoes(Integer num_types) {
-        this.conjuntos_questoes = new ArrayList<String>(num_types);
-        for (Integer i = 0; i < num_types; i++)
+    private void _initConjuntoQuestoes() {
+        this.conjuntos_questoes = new ArrayList<String>(this.tipos_prova);
+        for (Integer i = 0; i < this.tipos_prova; i++)
             this.conjuntos_questoes.add(new String(""));
     }
 
@@ -345,10 +357,10 @@ public class ProvBuilder {
             ._endl();
     }
     public void addQuestions() {
-        QuestionManager qm = QuestionManager.FromCSV(this.prova_folder);
+        QuestionManager qm = QuestionManager.FromCSV(this.prova_data_path);
 
         this._setupQuestionConfigs(qm);
-        this._initConjuntoQuestoes(this.tipos_prova);
+        this._initConjuntoQuestoes();
         List<List<Integer>> q_combs = qm.generateCombinations(
             this.tipos_prova,
             this.questoes_por_prova
@@ -415,11 +427,11 @@ public class ProvBuilder {
         );
 
         this.final_provas = new ArrayList<String>(this.tipos_prova);
-        for (Integer i = 0; i < this.tipos_prova; i++) {
+        for (String questoes : this.conjuntos_questoes) {
             this.final_provas.add(
                 new String(
                     this.prova_buffer + 
-                    this.conjuntos_questoes.get(i) +
+                    questoes +
                     this._generateEnding()
                 )
             );
@@ -434,9 +446,8 @@ public class ProvBuilder {
         this.built = true;
     }
 
-    // TODO: Add folder path treatment
-    // TODO: Check whether path truly exists
-    // TODO: Add argument for execution of this command
+    // TODO: Adapt to data_folder (dump_folder) not same as prova_data_path's folders
+    // TODO: Handle IOException
     public void generateTexFile() throws IOException {  
 
         if (!this.built)
@@ -448,23 +459,19 @@ public class ProvBuilder {
             Logger.Type.INFO
         );
 
-        String common_file_path = this.prova_folder.substring(
-            0,
-            this.prova_folder.lastIndexOf("/") + 1
-        ) + this.prova_id;
-
         for (Integer i = 0; i < this.final_provas.size(); i++) {
 
-            String specific_file_path = common_file_path +
-                                        "_tipo" + i + ".tex";
+            Path file_path = this.data_folder.resolve(
+                this.prova_id + "_tipo" + (i + 1) + ".tex"
+            );
             
             Logger.add(
                 null,
-                "caminho do arquivo: " + specific_file_path,
+                "caminho do arquivo: " + file_path,
                 Logger.Type.INFO
             );
         
-            File tex_file = new File(specific_file_path);
+            File tex_file = file_path.toFile();
             tex_file.createNewFile();
             PrintWriter pw = new PrintWriter(tex_file, "UTF-8");
 

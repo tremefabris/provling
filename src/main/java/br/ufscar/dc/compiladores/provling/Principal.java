@@ -17,16 +17,19 @@ import br.ufscar.dc.compiladores.provling.ProvLingParser.ProgramaContext;
 
 public class Principal {
 
-    static PrintWriter setupOutputFile(String filepath) {
+     static PrintWriter setupOutputWriter(Path output_file) {
         try {
-            File outFile = new File(filepath);
-            outFile.createNewFile();
-            PrintWriter pw = new PrintWriter(outFile, "UTF-8");
+            File out_file = output_file.toFile();
+            out_file.createNewFile();
+            PrintWriter pw = new PrintWriter(out_file, "UTF-8");
             return pw;
         }
         catch (IOException e) {
-            System.out.println("An error occured while opening file");
-            e.printStackTrace();
+            Logger.add(
+                null,
+                "erro ocorreu ao tentar abrir/criar arquivo " + output_file.toString(),
+                Logger.Type.ERROR
+            );
             return null;
         }
     }
@@ -64,10 +67,13 @@ public class Principal {
     public static void main(String[] args) {
 
         try {
-            
-            Path input_file = Paths.get(args[0]).toAbsolutePath();
 
-            CharStream cs = CharStreams.fromPath(input_file);
+            // TODO: Receive folder to dump .tex
+
+            // TODO: Handle InvalidPathException
+            Path input_path = Paths.get(args[0]).toAbsolutePath();
+
+            CharStream cs = CharStreams.fromPath(input_path);
             ProvLingLexer lex = new ProvLingLexer(cs);
 
             CommonTokenStream tokens = new CommonTokenStream(lex);
@@ -76,11 +82,12 @@ public class Principal {
             setupSyntaxErrorListener(parser);
 
             ProgramaContext tree = parser.programa();
-            // TODO: Fix -- breaks when using different folder
-            ProvLingSemantic sem = new ProvLingSemantic();
+            ProvLingSemantic sem = new ProvLingSemantic("tests/");
 
-            PrintWriter outputFile = setupOutputFile(args[1]);
-            if (outputFile == null) {
+            // TODO: Handle InvalidPathException
+            Path output_path = Paths.get(args[1]).toAbsolutePath();
+            PrintWriter output_writer = setupOutputWriter(output_path);
+            if (output_writer == null) {
                 System.exit(-1);
             }
 
@@ -91,9 +98,9 @@ public class Principal {
 
             // TODO: Do something with this
             // System.out.print(prova);
-            outputFile.print(prova);
+            output_writer.print(prova);
 
-            outputFile.close();
+            output_writer.close();
 
         }
 
@@ -133,8 +140,8 @@ public class Principal {
          */
         catch (Exception e) {
 
-            // System.out.println("Hey, remember me?");
-            
+            System.out.println("Oops, something bad is happening...");
+
             Logger.add(
                 null,
                 e.getMessage(),

@@ -1,6 +1,9 @@
 package br.ufscar.dc.compiladores.provling;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.InvalidPathException;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -12,8 +15,9 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
 
 
     // CONFIGURATION CONSTANTS
-    // TODO: Make folders absolute; use some third-party library
-    String MAIN_FOLDER;
+    // TODO: Adapt to data_folder (dump_folder) not same as prova_data_path's folders
+    Path DATA_FOLDER;
+    // TODO: Create variable to store folder where .tex will be dumped
     
     // INTERNAL RUNTIME INFORMATION
     String current_prova_id;
@@ -25,14 +29,15 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     /////////////////////////////////////////////////////////////////////////
 
 
-    public ProvLingSemantic() {
-        this.MAIN_FOLDER = "tests/";
+    public ProvLingSemantic() {   // dev option; don't use
+        this.DATA_FOLDER = Paths.get("tests/").toAbsolutePath();
     }
-    public ProvLingSemantic(String main_folder_path) {
-        this.MAIN_FOLDER = main_folder_path;
+    public ProvLingSemantic(Path data_folder_path) {
+        this.DATA_FOLDER = data_folder_path.toAbsolutePath();
     }
-    public void setMainFolder(String main_folder_path) {
-        this.MAIN_FOLDER = main_folder_path;
+    public ProvLingSemantic(String data_folder_path) {
+        // TODO: Handle InvalidPathException
+        this.DATA_FOLDER = Paths.get(data_folder_path).toAbsolutePath();
     }
 
 
@@ -70,7 +75,7 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
 
         if (ctx.config_geracao() != null) {
             pb = new ProvBuilder();
-            pb.withMainFolder(MAIN_FOLDER);
+            pb.withDataFolder(DATA_FOLDER);
             pb.addTemplateInfo();
         }
 
@@ -82,7 +87,15 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
 
         current_prova_id = ctx.IDENT().getText();
 
-        pb.withProvaId(current_prova_id);
+        try {
+            pb.withProvaId(current_prova_id);
+        }
+        catch (InvalidPathException ipe) {
+            throw new InvalidPathException(
+                ipe.getInput(),
+                "Linha " + ctx.getStop().getLine() + ": " + ipe.getReason()
+            );
+        }
 
         pb.addDocumentClass();
         pb.addPackages();
@@ -198,6 +211,7 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         catch (IOException e) {
 
             // Couldn't throw IOException, had to do this here
+            // TODO: Throw simple Exception?
             Logger.add(
                 null,
                 "não foi possível gerar arquivo TeX",
