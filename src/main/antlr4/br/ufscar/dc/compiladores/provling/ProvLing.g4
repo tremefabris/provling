@@ -1,10 +1,10 @@
 grammar ProvLing;
 
 programa:
-    identificador_prova questao*;
+    identificador_prova ( questao* | config_geracao );
 
 identificador_prova:
-    'QUESTOES'? 'PARA'? 'PROVA' IDENT;
+    'QUESTOES'? 'PARA'? 'PROVA' OP_ATRIB IDENT;
 
 questao:
     identificador_questao enunciado alternativas resposta explicacoes? fim_questao;
@@ -25,7 +25,43 @@ explicacoes:
     'EXPLICACOES' OP_ATRIB (LETRA OP_ATRIB FRASE)+;
 
 fim_questao:
-    'FIM' 'QUESTAO' IDENT;
+    'FIM' 'QUESTAO' OP_ATRIB IDENT;
+
+config_geracao:
+    header config_prova;
+
+header:
+    header_info+;
+
+// TODO: add DEPTO
+header_info:
+    instituicao |
+    disciplina |
+    docentes |
+    diretrizes;
+
+instituicao:
+    'INSTITUICAO' OP_ATRIB FRASE;
+
+disciplina:
+    'DISCIPLINA' OP_ATRIB FRASE;
+
+docentes:
+    'DOCENTES' OP_ATRIB FRASE+;
+
+diretrizes:
+    'DIRETRIZES' OP_ATRIB diretriz+;
+
+diretriz:
+    ( NUM_INT | NUM_REAL) OP_ATRIB FRASE;
+
+config_prova:
+    'CONFIG' OP_ATRIB configs+;
+
+configs:
+    'TIPOS' OP_ATRIB NUM_INT |
+    'QUESTOES' OP_ATRIB NUM_INT |
+    'ALUNOS' OP_ATRIB NUM_INT;
 
 // ============ KEYWORDS AND IDENTIFIERS ============
 
@@ -37,7 +73,7 @@ LETRA:
     ('A'..'Z');
 
 IDENT:
-    ('a'..'z' | 'A'..'Z' | '0'..'9' | '_')+;
+    ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '0'..'9' | '_')*;
 
 // ============ SENTENCE HANDLING ============
 
