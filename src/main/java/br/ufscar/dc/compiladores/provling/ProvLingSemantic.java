@@ -94,13 +94,6 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     @Override
     public Void visitPrograma(ProvLingParser.ProgramaContext ctx) {
 
-        if (ctx.config_geracao() != null) {
-            pb = new ProvBuilder();
-            pb.withDataFolder(this.DATA_FOLDER);
-            pb.withDumpFolder(this.DUMP_FOLDER);
-            pb.addTemplateInfo();
-        }
-
         return super.visitPrograma(ctx);
     }
 
@@ -109,6 +102,15 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
 
         current_prova_id = ctx.IDENT().getText();
 
+        return super.visitIdentificador_prova(ctx);
+    }
+
+    @Override
+    public Void visitConfig_geracao(ProvLingParser.Config_geracaoContext ctx) {
+
+        pb = new ProvBuilder();
+        pb.withDataFolder(this.DATA_FOLDER);
+        pb.withDumpFolder(this.DUMP_FOLDER);
         try {
             pb.withProvaId(current_prova_id);
         }
@@ -118,12 +120,13 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
                 "Linha " + ctx.getStop().getLine() + ": " + ipe.getReason()
             );
         }
-
+        
+        pb.addTemplateInfo();
         pb.addDocumentClass();
         pb.addPackages();
         pb.addItemDefinitions();
 
-        return super.visitIdentificador_prova(ctx);
+        return super.visitConfig_geracao(ctx);
     }
 
     @Override
