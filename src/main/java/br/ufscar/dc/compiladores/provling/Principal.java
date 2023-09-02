@@ -18,6 +18,27 @@ import br.ufscar.dc.compiladores.provling.ProvLingParser.ProgramaContext;
 
 public class Principal {
 
+    static void validateArguments(String[] args) {
+
+        Integer argc = args.length;
+
+        if (argc != 1) {
+            throw new IllegalArgumentException(
+                "número de argumentos inválido: esperava 1, recebi " + argc
+            );
+        }
+
+    }
+
+    static void guaranteeFileExistence(Path path) {
+        if (!path.toFile().exists()) {
+            throw new InvalidPathException(
+                path.toString(),
+                "arquivo não encontrado (ele existe mesmo?)"
+            );
+        }
+    }
+
     static PrintWriter setupOutputWriter(Path output_file) {
         try {
             File out_file = output_file.toFile();
@@ -39,20 +60,8 @@ public class Principal {
         parser.addErrorListener(sel);
     }
 
-    static String getFolderFromArgument(String path_arg) {
-        return path_arg.substring(
-            0,
-            path_arg.lastIndexOf("/") + 1
-        );
-    }
-
-    static void guaranteeFileExistence(Path path) {
-        if (!path.toFile().exists()) {
-            throw new InvalidPathException(
-                path.toString(),
-                "arquivo não encontrado (ele existe mesmo?)"
-            );
-        }
+    static Path getFolderFromFile(Path file) {
+        return file.getParent();
     }
 
     static void __debugLexer(ProvLingLexer lex) {
@@ -75,39 +84,22 @@ public class Principal {
     public static void main(String[] args) {
 
         try {
-
-            // TODO: Receive folder to dump .tex
+            validateArguments(args);
 
             Path input_path = Paths.get(args[0]).toAbsolutePath();
             guaranteeFileExistence(input_path);
 
             CharStream cs = CharStreams.fromPath(input_path);
             ProvLingLexer lex = new ProvLingLexer(cs);
-
             CommonTokenStream tokens = new CommonTokenStream(lex);
             ProvLingParser parser = new ProvLingParser(tokens);
-
             setupSyntaxErrorListener(parser);
-
             ProgramaContext tree = parser.programa();
-            ProvLingSemantic sem = new ProvLingSemantic("tests/");
 
-            Path output_path = Paths.get(args[1]).toAbsolutePath();
-            PrintWriter output_writer = setupOutputWriter(output_path);
-            if (output_writer == null) {
-                System.exit(-1);
-            }
+            Path dump_folder = getFolderFromFile(input_path);
+            ProvLingSemantic sem = new ProvLingSemantic(dump_folder);
 
             sem.visitPrograma(tree);
-
-            // TODO: Remove this
-            String prova = sem.getProva();
-
-            // TODO: Do something with this
-            output_writer.print(prova);
-
-            output_writer.close();
-
         }
 
         /*
@@ -146,7 +138,7 @@ public class Principal {
          */
         catch (Exception e) {
 
-            // System.out.println("Oops, something bad is happening...");
+            System.out.println("Oops, something bad is happening...");
 
             Logger.add(
                 null,

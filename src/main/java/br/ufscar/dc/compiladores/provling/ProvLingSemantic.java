@@ -15,10 +15,9 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
 
 
     // CONFIGURATION CONSTANTS
-    // TODO: Adapt to data_folder (dump_folder) not same as prova_data_path's folders
-    Path DATA_FOLDER;
-    // TODO: Create variable to store folder where .tex will be dumped
-    
+    Path DATA_FOLDER = Paths.get(System.getProperty("user.home"), ".provling").toAbsolutePath();
+    Path DUMP_FOLDER;
+
     // INTERNAL RUNTIME INFORMATION
     String current_prova_id;
     ProvBuilder pb;
@@ -30,20 +29,42 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
 
 
     public ProvLingSemantic() {   // dev option; don't use
-        this.DATA_FOLDER = Paths.get("tests/").toAbsolutePath();
+        this.DUMP_FOLDER = Paths.get("tests/").toAbsolutePath();
+        this._createDataFolderIfNeeded();
     }
-    public ProvLingSemantic(Path data_folder_path) {
-        this.DATA_FOLDER = data_folder_path.toAbsolutePath();
+    public ProvLingSemantic(Path dump_folder_path) {
+        this.DUMP_FOLDER = dump_folder_path.toAbsolutePath();
+        this._createDataFolderIfNeeded();
     }
-    public ProvLingSemantic(String data_folder_path) {
+    public ProvLingSemantic(String dump_folder_path) {
         // TODO: Handle InvalidPathException
-        this.DATA_FOLDER = Paths.get(data_folder_path).toAbsolutePath();
+        this.DUMP_FOLDER = Paths.get(dump_folder_path).toAbsolutePath();
+        this._createDataFolderIfNeeded();
     }
 
 
     /////////////////////////////////////////////////////////////////////////
     //  HELPER FUNCTIONS
     /////////////////////////////////////////////////////////////////////////
+
+    private void _createDataFolderIfNeeded() {
+        if (!this.DATA_FOLDER.toFile().exists()) {
+
+            Logger.add(
+                null,
+                "criando pasta " + this.DATA_FOLDER + " para armazenar informações necessárias...",
+                Logger.Type.WARNING
+            );
+
+            boolean created = this.DATA_FOLDER.toFile().mkdir();
+
+            if (!created) {
+                throw new RuntimeException(
+                    "não foi possível criar pasta " + this.DATA_FOLDER
+                );
+            }
+        }
+    }
 
     private String _strip(String frase) {
         return frase.substring(1, frase.length() - 1);
@@ -75,7 +96,8 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
 
         if (ctx.config_geracao() != null) {
             pb = new ProvBuilder();
-            pb.withDataFolder(DATA_FOLDER);
+            pb.withDataFolder(this.DATA_FOLDER);
+            pb.withDumpFolder(this.DUMP_FOLDER);
             pb.addTemplateInfo();
         }
 
@@ -211,7 +233,6 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         catch (IOException e) {
 
             // Couldn't throw IOException, had to do this here
-            // TODO: Throw simple Exception?
             Logger.add(
                 null,
                 "não foi possível gerar arquivo TeX",

@@ -16,9 +16,9 @@ public class ProvBuilder {
 
     /////////////////////////////////////////////////////////////////////////
     //  VARIABLES
-    //  TODO: Rethink variable names -- they are very bad right now
     /////////////////////////////////////////////////////////////////////////
 
+    private Path dump_folder;
 
     private Path data_folder;
     private boolean data_folder_set = false;
@@ -75,6 +75,9 @@ public class ProvBuilder {
         this.data_folder = data_folder;
         this.data_folder_set = true;
         this._setupDataPath();
+    }
+    public void withDumpFolder(Path dump_folder) {
+        this.dump_folder = dump_folder;
     }
     // TODO: Handle InvalidPathException
     private void _setupDataPath() {
@@ -138,7 +141,6 @@ public class ProvBuilder {
             this.questoes_por_prova = max_questions;
             possible_types = 1;
         }
-
         if (this.tipos_prova > possible_types) {
 
             String _error_msg = "config pede " + this.tipos_prova +
@@ -451,8 +453,8 @@ public class ProvBuilder {
         this.built = true;
     }
 
-    // TODO: Adapt to data_folder (dump_folder) not same as prova_data_path's folders
     // TODO: Handle IOException
+    // TODO: Defer dumping responsability to upper level
     public void generateTexFile() throws IOException {  
 
         if (!this.built)
@@ -466,7 +468,7 @@ public class ProvBuilder {
 
         for (Integer i = 0; i < this.final_provas.size(); i++) {
 
-            Path file_path = this.data_folder.resolve(
+            Path file_path = this.dump_folder.resolve(
                 this.prova_id + "_tipo" + (i + 1) + ".tex"
             );
             
