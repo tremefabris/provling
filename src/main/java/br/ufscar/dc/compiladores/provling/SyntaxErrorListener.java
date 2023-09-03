@@ -12,6 +12,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 
+// TODO: Make better syntax errors
 public class SyntaxErrorListener implements ANTLRErrorListener {
 
     @Override
