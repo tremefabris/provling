@@ -20,6 +20,14 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
 
     // INTERNAL RUNTIME INFORMATION
     String current_prova_id;
+    
+    // QUESTION BANK GENERATION
+    DataCreator dc;
+    boolean first_time_generating = true;
+
+    Integer qtde_alt_in_question;
+
+    // PROVA GENERATION
     ProvBuilder pb;
 
 
@@ -47,6 +55,7 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     //  HELPER FUNCTIONS
     /////////////////////////////////////////////////////////////////////////
 
+    // TODO: Defer responsability to DataCreator
     private void _createDataFolderIfNeeded() {
         if (!this.DATA_FOLDER.toFile().exists()) {
 
@@ -87,6 +96,14 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return false;
     }
 
+    private boolean _letrasOrderedCorrectly(String first_letra, String sec_letra) {
+
+        Integer first_ascii = (int) first_letra.charAt(0);
+        Integer sec_ascii   = (int) sec_letra.charAt(0);
+
+        return (sec_ascii == first_ascii + 1);
+    }
+
     /////////////////////////////////////////////////////////////////////////
     //  OVERRIDES -- SEMANTIC TREE TRAVERSING
     /////////////////////////////////////////////////////////////////////////
@@ -103,6 +120,103 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         current_prova_id = ctx.IDENT().getText();
 
         return super.visitIdentificador_prova(ctx);
+    }
+
+    @Override
+    public Void visitQuestao(ProvLingParser.QuestaoContext ctx) {
+
+        if (this.first_time_generating) {
+            first_time_generating = false;
+            dc = new DataCreator(this.DATA_FOLDER, this.current_prova_id);
+            dc.beginProva();
+        }
+        dc.createQuestion();
+
+        return super.visitQuestao(ctx);
+    }
+
+    @Override
+    public Void visitIdentificador_questao(ProvLingParser.Identificador_questaoContext ctx) {
+
+        dc.withQuestionId(ctx.IDENT().getText());
+
+        return super.visitIdentificador_questao(ctx);
+    }
+
+    @Override
+    public Void visitEnunciado(ProvLingParser.EnunciadoContext ctx) {
+
+        dc.withEnunciado(this._strip(ctx.FRASE().getText()));
+
+        return super.visitEnunciado(ctx);
+    }
+
+    @Override
+    public Void visitAlternativas(ProvLingParser.AlternativasContext ctx) {
+        this.qtde_alt_in_question = ctx.FRASE().size();
+
+        String curr_letra;
+        String last_letra = null;
+        for (Integer i = 0; i < this.qtde_alt_in_question; i++) {
+
+            curr_letra = ctx.LETRA(i).getText();
+
+            if (last_letra != null) {
+                if (!this._letrasOrderedCorrectly(last_letra, curr_letra)) {
+
+                    Logger.add(
+                        ctx.LETRA(i).getSymbol(),
+                        "alternativas " + last_letra + " e " + curr_letra +
+                        " fora de ordem; consertando...",
+                        Logger.Type.WARNING 
+                    );
+            }}
+            last_letra = curr_letra;
+
+            dc.withAlternativa(this._strip(ctx.FRASE(i).getText()));
+        }
+        
+        return super.visitAlternativas(ctx);
+    }
+
+    @Override
+    public Void visitResposta(ProvLingParser.RespostaContext ctx) {
+
+        dc.withResposta(ctx.LETRA().getText());
+
+        return super.visitResposta(ctx);
+    }
+
+    // TODO: Check if LETRAs are ordered correctly
+    @Override
+    public Void visitExplicacoes(ProvLingParser.ExplicacoesContext ctx) {
+
+        if (this.qtde_alt_in_question != ctx.FRASE().size()) {
+            throw new RuntimeException(
+                "se houver EXPLICACOES, deve ter para todas as ALTERNATIVAS possíveis"
+            );
+        }
+
+        for (Integer i = 0; i < ctx.FRASE().size(); i++) {
+            dc.withExplicacao(this._strip(ctx.FRASE(i).getText()));
+        }
+
+        return super.visitExplicacoes(ctx);
+    }
+
+    @Override
+    public Void visitFim_questao(ProvLingParser.Fim_questaoContext ctx) {
+
+        try {
+            dc.build().store();
+        }
+        catch (IOException ioe) {
+            throw new RuntimeException(
+                "um erro de I/0 ocorreu ao salvar informações da prova " + this.current_prova_id
+            );
+        }
+
+        return super.visitFim_questao(ctx);
     }
 
     @Override
@@ -234,19 +348,9 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
             pb.generateTexFile();
         }
         catch (IOException e) {
-
-            // Couldn't throw IOException, had to do this here
-            Logger.add(
-                null,
-                "não foi possível gerar arquivo TeX",
-                Logger.Type.ERROR
+            throw new RuntimeException(
+                "não foi possível gerar arquivo TeX da prova " + this.current_prova_id
             );
-            Logger.add(
-                null,
-                "retorno da JVM: " + e.getMessage(),
-                Logger.Type.ERROR
-            );
-
         }
 
         return null;
