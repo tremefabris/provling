@@ -138,7 +138,7 @@ public class Principal {
          */
         catch (Exception e) {
 
-            System.out.println("Oops, something bad is happening...");
+            // System.out.println("Oops, something bad is happening...");
 
             Logger.add(
                 null,
