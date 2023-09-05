@@ -11,8 +11,14 @@ import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 
+/*
+ * Syntax Error Listener
+ * 
+ * Just receives the syntax error and returns it pretty-fied.
+ */
 
-// TODO: Make better syntax errors
+
+// TODO: Make syntax errors more fine-grained
 public class SyntaxErrorListener implements ANTLRErrorListener {
 
     @Override

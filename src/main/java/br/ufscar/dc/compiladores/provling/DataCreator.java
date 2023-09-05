@@ -7,6 +7,20 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Question Data Creator
+ * 
+ * This class is responsible for the buffering, organizing and subsequently
+ * storing of the questions' information received by ProvLingSemantic from
+ * the input file.
+ * 
+ * Deals with simple String concatenation to buffer the question information.
+ * Organizes information so that the final data file is in CSV format.
+ * Stores created files in the appropriate place, with is defined by the
+ * Path given by ProvLingSemantic during construction.
+ */
+
+
 public class DataCreator {
 
     /////////////////////////////////////////////////////////////////////////

@@ -7,6 +7,15 @@ import java.nio.file.InvalidPathException;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+/*
+ * Semantic Tree Visitor
+ * 
+ * The ProvLingSemantic class is responsible for handling the necessary
+ * components to make ProvLing work. It extracts data from the input file,
+ * instantiates the necessary objects to deal with said data, and handles
+ * errors thrown its way (as well as throwing its fair share).
+ */
+
 
 public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     
@@ -36,6 +45,11 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     //  CONSTRUCTORS
     /////////////////////////////////////////////////////////////////////////
 
+    /*
+     * The ProvLingSemantic constructors basically just receive the
+     * folder to dump data and initialize the /home/user/.provling/
+     * folder to store questions.
+     */
 
     public ProvLingSemantic() {   // dev option; don't use
         this.DUMP_FOLDER = Paths.get("tests/").toAbsolutePath();
@@ -109,12 +123,18 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     //  OVERRIDES -- SEMANTIC TREE TRAVERSING
     /////////////////////////////////////////////////////////////////////////
 
+    /*
+     * ProvLingSemantic starts here, but doesn't do much.
+     */
     @Override
     public Void visitPrograma(ProvLingParser.ProgramaContext ctx) {
 
         return super.visitPrograma(ctx);
     }
 
+    /*
+     * Retrieves the current prova's ID.
+     */
     @Override
     public Void visitIdentificador_prova(ProvLingParser.Identificador_provaContext ctx) {
 
@@ -123,6 +143,12 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitIdentificador_prova(ctx);
     }
 
+    /*
+     * Question-mode visitor
+     * 
+     * Instantiates a DataCreator, which handles question organization
+     * and data storing, and uses its to begin a new question.
+     */
     @Override
     public Void visitQuestao(ProvLingParser.QuestaoContext ctx) {
 
@@ -136,6 +162,12 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitQuestao(ctx);
     }
 
+    /*
+     * Question-mode visitor
+     * 
+     * Retrieves the question's ID.
+     * Errors out if ID is duplicate.
+     */
     @Override
     public Void visitIdentificador_questao(ProvLingParser.Identificador_questaoContext ctx) {
 
@@ -152,6 +184,12 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitIdentificador_questao(ctx);
     }
 
+    /*
+     * Question-mode visitor
+     * 
+     * Retrieves the ENUNCIADO from the question and passes it
+     * to DataCreator.
+     */
     @Override
     public Void visitEnunciado(ProvLingParser.EnunciadoContext ctx) {
 
@@ -160,6 +198,13 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitEnunciado(ctx);
     }
 
+    /*
+     * Question-mode visitor
+     * 
+     * Retrieves ALTERNATIVAS from question, checks if they are in order, and
+     * passes them to DataCreator.
+     * Warns the user if a pair of ALTERNATIVAS aren't in order.
+     */
     @Override
     public Void visitAlternativas(ProvLingParser.AlternativasContext ctx) {
         this.qtde_alt_in_question = ctx.FRASE().size();
@@ -188,6 +233,11 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitAlternativas(ctx);
     }
 
+    /*
+     * Question-mode visitor
+     * 
+     * Retrieves the RESPOSTA from the question and passes it to DataCreator
+     */
     @Override
     public Void visitResposta(ProvLingParser.RespostaContext ctx) {
 
@@ -196,6 +246,13 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitResposta(ctx);
     }
 
+    /*
+     * Question-mode visitor
+     * 
+     * Retrieves the EXPLICACOES from the question and passes it to DataCreator.
+     * Errors out if the number of EXPLICACOES is different from the number of
+     * RESPOSTAS.
+     */
     // TODO: Check if LETRAs are ordered correctly
     @Override
     public Void visitExplicacoes(ProvLingParser.ExplicacoesContext ctx) {
@@ -213,6 +270,11 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitExplicacoes(ctx);
     }
 
+    /*
+     * Question-mode visitor
+     * 
+     * Finishes the question creation, builds it and stores the data.
+     */
     @Override
     public Void visitFim_questao(ProvLingParser.Fim_questaoContext ctx) {
 
@@ -228,6 +290,13 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitFim_questao(ctx);
     }
 
+    /*
+     * Exam Generation-mode visitor
+     * 
+     * Initializes a ProvBuilder (responsible for creating the actual exam)
+     * and passes necessary information to it.
+     * Errors out if the prova's ID doesn't lead to a proper file.
+     */
     @Override
     public Void visitConfig_geracao(ProvLingParser.Config_geracaoContext ctx) {
 
@@ -252,6 +321,11 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitConfig_geracao(ctx);
     }
 
+    /*
+     * Exam Generation-mode visitor
+     * 
+     * Uses ProvBuilder to properly create the headers.
+     */
     @Override
     public Void visitHeader(ProvLingParser.HeaderContext ctx) {
 
@@ -267,6 +341,11 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return null;
     }
 
+    /*
+     * Exam Generation-mode visitor
+     * 
+     * Passes the INSTITUICAO information to ProvBuilder.
+     */
     @Override
     public Void visitInstituicao(ProvLingParser.InstituicaoContext ctx) {
 
@@ -276,6 +355,11 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitInstituicao(ctx);
     }
 
+    /*
+     * Exam Generation-mode visitor
+     * 
+     * Passes the DISCIPLINA information to ProvBuilder.
+     */
     @Override
     public Void visitDisciplina(ProvLingParser.DisciplinaContext ctx) {
 
@@ -285,6 +369,11 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitDisciplina(ctx);
     }
 
+    /*
+     * Exam Generation-mode visitor
+     * 
+     * Passes the DOCENTES information to ProvBuilder.
+     */
     @Override
     public Void visitDocentes(ProvLingParser.DocentesContext ctx) {
 
@@ -295,6 +384,11 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitDocentes(ctx);
     }
 
+    /*
+     * Exam Generation-mode visitor
+     * 
+     * Warns the user if a pair of DIRETRIZES are weirdly ordered.
+     */
     @Override
     public Void visitDiretrizes(ProvLingParser.DiretrizesContext ctx) {
 
@@ -323,6 +417,11 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitDiretrizes(ctx);
     }
 
+    /*
+     * Exam Generation-mode visitor
+     * 
+     * Passes a DIRETRIZ to ProvBuilder.
+     */
     @Override
     public Void visitDiretriz(ProvLingParser.DiretrizContext ctx) {
 
@@ -336,6 +435,15 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return super.visitDiretriz(ctx);
     }
 
+    /*
+     * Exam Generation-mode visitor
+     * 
+     * Orders ProvBuilder to add questions to the exam (following a logic defined
+     * by the number of types and questions) and generates TeX file.
+     * 
+     * Errors out if TeX file was unable to be created or if something bad happens
+     * while ProvBuilder is adding questions.
+     */
     @Override
     public Void visitConfig_prova(ProvLingParser.Config_provaContext ctx) {
 
@@ -365,6 +473,12 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
         return null;
     }
 
+    /*
+     * Exam Generation-mode visitor
+     * 
+     * Passes the configurations to execute the exam generation, such
+     * as amount of exam types and amount of questions in each exam.
+     */
     @Override
     public Void visitConfigs(ProvLingParser.ConfigsContext ctx) {
 
@@ -393,7 +507,7 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     //  DEBUGGINGS, RETURNS
     /////////////////////////////////////////////////////////////////////////
 
-    public String getProva() {
+    public String __debugGetProva() {
         return this.pb.__debugGetProva();
     }
 }

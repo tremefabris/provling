@@ -15,6 +15,17 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
 
+/*
+ * Question-Data Retriever
+ * 
+ * This class is responsible for retrieving questions' data that are already stored
+ * in memory (which means a previous execution of ProvLing). It reads CSV files,
+ * organizes the retrieved contents to properly return them to ProvBuilder, and
+ * handles the logic for random question selection. It also has combinatoric functions
+ * to warn the user if the amount of questions per exam, or types of exams, are
+ * possible or not.
+ */
+
 
 public class QuestionManager {
     
