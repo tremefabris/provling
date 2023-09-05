@@ -1,0 +1,169 @@
+QUESTOES PARA PROVA: prova_filosofia
+
+QUESTAO: q_gestell
+
+ENUNCIADO:
+    "A noção heideggeriana de Gestell trata do(a):"
+
+ALTERNATIVAS:
+    A: "Inconsistente permanência da Verdade do Ser para os homens, na relação destes com os entes, de modo a
+        constantemente apresentar-se escondida"
+    B: "Fundamento de possibilidade que permite a união do ente com seu (modo de) ser"
+    C: "Lógica interna e imanente das formas tecnológicas, que estruturam aos homens um modo de ser
+        específico e, em última instância, de encapsulamento e organização"
+
+RESPOSTA:
+    C
+
+FIM QUESTAO: q_gestell
+
+QUESTAO: q_marx_nietzsche
+
+ENUNCIADO:
+    "De acordo com Roberto Schwarz, qual conceito nietzschiano possui uma profunda associação com
+    determinado conceito marxiano?"
+
+ALTERNATIVAS:
+    A: "Eterno Retorno e Capital"
+    B: "Vontade de Potência e Luta de Classes"
+    C: "Superhomem e Proletariado"
+    D: "Morte dos Ídolos e Revolução Proletária"
+
+RESPOSTA:
+    A
+
+FIM QUESTAO: q_marx_nietzsche
+
+QUESTAO: q_lenin
+
+ENUNCIADO:
+    "Todas as alternativas abaixo expressam condutas históricas que um partido comunista,
+    segundo Lênin, deve levar a cabo, EXCETO UMA. Assinale a errada."
+
+ALTERNATIVAS:
+    A: "O partido comunista deve possuir um comitê central de revolucionários profissionais,
+        pagos pelo próprio partido, cuja única tarefa seja a revolução proletária"
+    B: "O partido comunista deve tomar atitudes radicais contra o Estado e ordem burguesa
+        vigentes, recorrendo até a atos terroristas, sempre que houver oportunidade"
+    C: "O partido comunista deve se aliar às diferentes lutas de trabalhadores que acontecem,
+        como greves, e buscar ajudá-las a serem bem-sucedidas com agitação, propaganda e
+        participação efetiva dos seus militantes"
+    D: "O partido comunista deve preservar e alimentar suas formas de organização que não estejam
+        ligadas à legalidade burguesa"
+
+RESPOSTA:
+    B
+
+FIM QUESTAO: q_lenin
+
+QUESTAO: q_banquete
+
+ENUNCIADO:
+    "No livro O Banquete, escrito por Platão, os personagens Sócrates, Agatão, Aristodemo, Fedro,
+    Pausânias, Erixímaco, Aristófanes e Alcibíades discutem várias facetas de um tema específico.
+    Que tema é esse?"
+
+ALTERNATIVAS:
+    A: "O Amor (Eros)"
+    B: "A Natureza (Physis)"
+    C: "O Descomedimento (Hybris)"
+    D: "A Felicidade (Eudaimonia)"
+    E: "A Amizade (Philia)"
+
+RESPOSTA:
+    A
+
+FIM QUESTAO: q_banquete
+
+QUESTAO: q_foucault
+
+ENUNCIADO:
+    "De acordo com Foucault em História da Sexualidade I, os dispositivos de poder da prática clínica
+    psicanalítica possuem raízes antigas em outra expressão social. Que raízes são essas?" 
+
+ALTERNATIVAS:
+    A: "A prática espartana de eugenia aos recém-nascidos que acreditavam não apresentar aptidão e 
+        condicionamento físicos necessários à guerra"
+    B: "A ágora grega e, em geral, as formas de sociabilidade da grécia antiga que orbitavam ao
+        redor de discussões lógicas sobre temas gerais da época"
+    C: "As torturas camponesas realizadas como forma de punição a comportamentos considerados
+        indevidos ao senhor feudal"
+    D: "A prática de confissão católica inaugurada como forma de abordar diretamente a vida dos
+        fiéis, especialmente temas removidos da discussão social"
+
+RESPOSTA:
+    D
+
+FIM QUESTAO: q_foucault
+
+QUESTAO: q_eudaimonia
+
+ENUNCIADO:
+    "Utilizando-se da prática filológica de Heidegger para compreensão dos termos gregos, o termo
+    eudaimonia seria mais próximo de:"
+
+ALTERNATIVAS:
+    A: "Felicidade completa relacionada ao bem-estar com a sociedade ao redor e com seus deveres
+        enquanto cidadão da pólis grega"
+    B: "Preenchimento de si por um gênio/demônio bom, conferindo a si virtudes"
+    C: "Gratificação sexual presente na relação entre amantes e amados gregos"
+
+RESPOSTA:
+    B
+
+FIM QUESTAO: q_eudaimonia
+
+QUESTAO: q_niilismo
+
+ENUNCIADO:
+    "De acordo com a exposição que Nietzsche faz dos seus pensamentos em Crepúsculo dos Ídolos,
+    qual seria as quatro etapas de niilismo?"
+
+ALTERNATIVAS:
+    A: "Niilismo fraco, niilismo forte, niilismo confuso, niilismo compreensível"
+    B: "Niilismo negativo, niilismo reativo, niilismo passivo, niilismo ativo"
+    C: "Niilismo cristão, niilismo islâmico, niilismo judaico, niilismo ateu"
+    D: "Niilismo físico, niilismo químico, niilismo biológico, niilismo matemático"
+
+RESPOSTA:
+    B
+
+FIM QUESTAO: q_niilismo
+
+QUESTAO: q_hegel
+
+ENUNCIADO:
+    "No pensamento hegeliano, a compreensão do mundo pelo homem se estrutura à medida que:"
+
+ALTERNATIVAS:
+    A: "Interage ativamente nesse mundo, relacionando-se dialeticamente com a natureza que vê
+        e transforma, compreendendo tal como medida de si"
+    B: "Na correlação do imediato indeterminado, a existência das coisas, com seu objeto imediato,
+        o corpo, em grau dialético"
+    C: "Conserva sua razão para além de si, na forma de um Estado, como maneira de alcançar
+        uma razão externa e, consequentemente, pertencente ao mundo"
+
+RESPOSTA:
+    A
+
+FIM QUESTAO: q_hegel
+
+QUESTAO: q_fetiche
+
+ENUNCIADO:
+    "Para Marx, o que é a fetichização da mercadoria?"
+
+ALTERNATIVAS:
+    A: "O nascimento e desenvolvimento de fetiches sexuais mediados pela presença de mercadorias
+        compráveis"
+    B: "A super-estima atribuída a produtos mundanos em virtude da propaganda de consumo neoliberal,
+        especialmente no que concerne a marcas"
+    C: "A compreensão da mercadoria como possuidora de atributos naturais e universais, de modo que
+        esses determinam completamente a relação de produção que se estrutura ao redor delas"
+    D: "A elaboração de instrumentos religiosos na forma de fetiches tribais a partir de mercadorias
+        compráveis, indicando uma crítica ao consumismo da produção de mercadorias"
+
+RESPOSTA:
+    C
+
+FIM QUESTAO: q_fetiche

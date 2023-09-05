@@ -1,0 +1,163 @@
+// Questões retiradas diretamente do site
+// https://www.ime.usp.br/~piccione/Downloads/mat111c_Prova1C.pdf
+//
+// Um agradecimento ao Prof. Paolo Piccione
+// por disponbilizar a prova dele abertamente
+// na internet
+
+PROVA: prova_calculo
+
+QUESTAO: q_1
+
+ENUNCIADO:
+    "Seja $\\mathcal{A}_n, n \\in \\mathbb{N}$, uma família de afirmações. Assuma que $\\mathcal{A}_5$
+    seja verdadeira, e que se $\\mathcal{A}_n$ é verdadeira, então $\\mathcal{A}_{n + 2}$ também é
+    verdadeira. Qual das seguintes afirmações abaixo é verdadeira?"
+
+ALTERNATIVAS:
+    A: "a afirmação $\\mathcal{A}_3$ é verdadeira"
+    B: "$\\mathcal{A}_{2n + 1}$ é verdadeira para todo $n \\geq 2$"
+    C: "a afirmação $\\mathcal{A}_{22}$ é verdadeira"
+    D: "todas as afirmações $\\mathcal{A}_n$ são verdadeiras"
+    E: "as afirmações $\\mathcal{A}_n$, com $n \\geq 5$, são verdadeiras"
+
+RESPOSTA:
+    B
+
+FIM QUESTAO: q_1
+
+QUESTAO: q_2
+
+ENUNCIADO:
+    "Calcule o limite $L = \\lim_{n \\to \\infty} \\frac{\\cos n}{n}$"
+
+ALTERNATIVAS:
+    A: "$L = \\frac{1}{2}$"
+    B: "$L = 0$"
+    C: "$L = 1$"
+    D: "$L = \\frac{\\cos \\infty}{\\infty}$"
+    E: "$L = + \\infty$"
+
+RESPOSTA:
+    B
+
+FIM QUESTAO: q_2
+
+QUESTAO: q_3
+
+ENUNCIADO:
+    "Calcule o limite $L = \\lim_{x \\to 0} \\frac{\\sin (2x)}{\\tan (5x)}$"
+
+ALTERNATIVAS:
+    A: "$L = \\frac{2}{5}$"
+    B: "$L = \\frac{5}{2}$"
+    C: "$L = 0$"
+    D: "$L = 1$"
+    E: "$L = 2$"
+
+RESPOSTA:
+    A
+
+FIM QUESTAO: q_3
+
+QUESTAO: q_4
+
+ENUNCIADO:
+    "Resolva a desigualdade $|x - 3| < 2 |x|$"
+
+ALTERNATIVAS:
+    A: "$x \\in ]-\\infty, -3[ \\cup ]3, +\\infty[$"
+    B: "$x \\in ]-\\infty, -3[$"
+    C: "$x \\in ]-\\infty, -3[ \\cup ]1, +\\infty[$"
+    D: "$x \\in ]1, +\\infty[$"
+    E: "$x \\in ]-\\infty, -1[ \\cup ]3, +\\infty[$"
+
+RESPOSTA:
+    C
+
+FIM QUESTAO: q_4
+
+QUESTAO: q_5
+
+ENUNCIADO:
+    "Dada $f(x) = e^{2x}$ e $g(x) = 1 - \\cos x$, calcule a composição $h(x) = f(g(x))$"
+
+ALTERNATIVAS:
+    A: "$h(x) = \\frac{e}{e^{\\cos x}}$"
+    B: "$h(x) = e^{1 - \\cos x}$"
+    C: "$h(x) = \\frac{e}{e^{2 \\cos x}}$"
+    D: "$h(x) = \\frac{e^2}{e^{2 \\cos x}}$"
+    E: "$h(x) = 1 - \\cos (e^{2x})$"
+
+RESPOSTA:
+    D
+
+FIM QUESTAO: q_5
+
+QUESTAO: q_6
+
+ENUNCIADO:
+    "Calcule a soma $\\sum_{k = 1}^N 3k$"
+
+ALTERNATIVAS:
+    A: "$\\frac{2}{3} N (N + 1)$"
+    B: "$2 N (N + 1)$"
+    C: "$\\frac{3}{2} N (N - 1)$"
+    D: "$3 N (N + 1)$"
+    E: "$\\frac{3}{2} N (N + 1)$"
+
+RESPOSTA:
+    E
+
+FIM QUESTAO: q_6
+
+QUESTAO: q_7
+
+ENUNCIADO:
+    "Determine as soluções da equação $3^{x^2 - 3} - 9^x = 0$"
+
+ALTERNATIVAS:
+    A: "$x = 3$"
+    B: "$x = 3$ e $x = -1$"
+    C: "$x = -3$ e $x = 1$"
+    D: "$x = 3, x = 2$ e $x = -1$"
+    E: "$x = -1$"
+
+RESPOSTA:
+    B
+
+FIM QUESTAO: q_7
+
+QUESTAO: q_8
+
+ENUNCIADO:
+    "Resolva a equação $2 \\log_3 x + \\log_9 x = 10$"
+
+ALTERNATIVAS:
+    A: "$x = 10^9$"
+    B: "a equação não admite soluções"
+    C: "$x = 81$"
+    D: "$x = 9^5$"
+    E: "$x = 27$"
+
+RESPOSTA:
+    C
+
+FIM QUESTAO: q_8
+
+QUESTAO: q_9
+
+ENUNCIADO:
+    "Calcule a derivada da função $f(x) = \\sin^2 x$"
+
+ALTERNATIVAS:
+    A: "$f'(x) = -2 \\sin x \\cos x$"
+    B: "$f'(x) = - \\sin x \\cos x$"
+    C: "$f'(x) = \\cos^2 x$"
+    D: "$f'(x) = \\sin x \\cos x$"
+    E: "$f'(x) = \\sin (2x)$"
+
+RESPOSTA:
+    E
+
+FIM QUESTAO: q_9

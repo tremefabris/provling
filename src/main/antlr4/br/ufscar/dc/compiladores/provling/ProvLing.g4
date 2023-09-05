@@ -82,7 +82,7 @@ ESC_SEQ:
     '\\"';
 
 FRASE:
-    '"' ( ESC_SEQ | ~( '"' | '\\' ) )* '"';
+    '"' ( ESC_SEQ | ~( '"' ) )* '"';
 
 // is this right?
 INCOMPLETA_FRASE:

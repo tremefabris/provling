@@ -139,8 +139,16 @@ public class ProvLingSemantic extends ProvLingBaseVisitor<Void> {
     @Override
     public Void visitIdentificador_questao(ProvLingParser.Identificador_questaoContext ctx) {
 
-        dc.withQuestionId(ctx.IDENT().getText());
-
+        try {
+            dc.withQuestionId(ctx.IDENT().getText());
+        }
+        catch (RuntimeException re) {
+            throw new RuntimeException(
+                "Linha " + ctx.IDENT().getSymbol().getLine() + ": " +
+                re.getMessage()
+            );
+        }
+        
         return super.visitIdentificador_questao(ctx);
     }
 

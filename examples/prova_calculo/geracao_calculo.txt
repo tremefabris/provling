@@ -1,0 +1,28 @@
+// Configurações inferidas diretamente do site
+// https://www.ime.usp.br/~piccione/Downloads/mat111c_Prova1C.pdf
+//
+// Um agradecimento ao Prof. Paolo Piccione
+// por disponbilizar a prova dele abertamente
+// na internet
+
+PROVA: prova_calculo
+
+INSTITUICAO:
+    "Universidade Federal de Matemática Pura"
+
+DISCIPLINA:
+    "Cálculo Diferencial e Integral"
+
+DOCENTES:
+    "Paolo Piccione"
+
+DIRETRIZES:
+    1: "A duração da prova é de duas horas"
+    2: "Assinale as alternativas corretas na FOLHA DE RESPOSTAS"
+    3: "Cada questão tem apenas UMA resposta correta"
+    4: "No final da prova, deve ser entregue apenas a folha de respostas"
+    5: "BOA PROVA!"
+
+CONFIG:
+    QUESTOES: 7
+    TIPOS: 3

@@ -17,6 +17,8 @@ public class DataCreator {
     Path data_folder;
     Path questions_folder;
 
+    List<String> question_id_table = new ArrayList<String>();
+
     String prova_id;
     String question_id;
 
@@ -91,7 +93,15 @@ public class DataCreator {
         this._addQuestionHeader();
     }
     public void withQuestionId(String question_id) {
+
+        if (this.question_id_table.contains(question_id)) {
+            throw new RuntimeException(
+                "ID de questão " + question_id + " duplicado"
+            );
+        }
+
         this.question_id = question_id;
+        this.question_id_table.add(question_id);
     }
     public void withEnunciado(String enunciado) {
         this.enunciado = enunciado;
