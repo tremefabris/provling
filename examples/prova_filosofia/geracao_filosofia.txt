@@ -1,0 +1,20 @@
+PROVA: prova_filosofia
+
+INSTITUICAO:
+    "Universidade Federal de Filosofia"
+
+DISCIPLINA:
+    "Filosofia Geral I"
+
+DOCENTES:
+    "Jairo Silva"
+    "Joana Estela"
+
+DIRETRIZES:
+    1: "A aplicação da prova terá duração de 1h40"
+    2: "Não será permitido a consulta a quaisquer materiais, digitais ou não"
+    3: "Qualquer descumprimento das regras mencionadas ocasionará em nota ZERO"
+
+CONFIG:
+    QUESTOES: 7
+    TIPOS: 3
