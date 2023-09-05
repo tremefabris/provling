@@ -82,7 +82,7 @@ QUESTAO: id_questao_1        // ID da questão 1
 
 ENUNCIADO:
     "Aqui você coloca o enunciado da sua questão (não esqueça as aspas!).
-    Ah, e pode pular linha a vontade rs"
+    Ah, e pode pular linha à vontade rs"
 
 ALTERNATIVAS:
     A: "Cada alternativa tem uma letra"
