@@ -11,6 +11,29 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.InvalidPathException;
 
+/*
+ * Exam Generator
+ * 
+ * Buffers information to construct the exam (in LaTeX) and stores the
+ * resulting TeX file in the folder given by ProvLingSemantic during
+ * construction.
+ * 
+ * This class communicates with QuestionManager to retrieve information
+ * about questions already stored in memory - all the responsability of
+ * reading CSV files and organizing them is deferred to QuestionManager.
+ * 
+ * Has many error checking and user-warnings:
+ * - Errors out if an exam's data file, infered from its ID, doesn't exist;
+ * - Warns user if they've asked for more questions per exam than possible;
+ * - Warns user if they've asked for more types of exams than possible;
+ * - Errors out if user didn't provide TIPOS or QUESTOES configurations.
+ * 
+ * The final exam has a fixed template that is incremented in the buffer
+ * every time specific functions are called. The only truly dynamic things
+ * to add are the institution, the teachers, the subject's name, the guidelines
+ * and the questions.
+ */
+
 
 public class ProvBuilder {
 

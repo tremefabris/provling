@@ -5,6 +5,16 @@ import java.util.ArrayList;
 
 import org.antlr.v4.runtime.Token;
 
+/*
+ * ProvLing Logger
+ * 
+ * Simple class: statically adds log messages to a List which is read
+ * in ProvLing's entrypoint.
+ * 
+ * The coolest thing about this class are the ANSI definitions for
+ * colored logging information.
+ */
+
 
 public class Logger {
     
